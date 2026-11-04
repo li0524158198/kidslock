@@ -145,6 +145,17 @@
             android:columnCount="3"
             android:layout_marginBottom="@dimen/spacing_medium">
 
+            <Button android:id="@+id/btnTime30s"
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="@dimen/btn_height"
+                android:layout_margin="@dimen/btn_margin"
+                android:text="30秒"
+                android:textSize="@dimen/text_body"
+                android:background="@drawable/btn_settings_bg"
+                android:textColor="@color/btn_text"
+                android:focusable="true"
+                android:clickable="true" />
             <Button android:id="@+id/btnTime15"
                 android:layout_width="0dp"
                 android:layout_columnWeight="1"

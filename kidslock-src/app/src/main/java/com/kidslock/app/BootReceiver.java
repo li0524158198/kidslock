@@ -67,8 +67,7 @@ public class BootReceiver extends BroadcastReceiver {
         // 开机自启 → 启动计时
         if (pref.isAutoStart()) {
             Log.i(TAG, "Auto start enabled, starting timer");
-            int minutes = pref.getWatchLimitMinutes();
-            pref.startTimer(minutes);
+            pref.startTimer(pref.getWatchLimitSeconds());
             startLockService(context);
         }
     }

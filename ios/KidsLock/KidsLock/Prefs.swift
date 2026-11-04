@@ -13,7 +13,7 @@ final class Prefs: ObservableObject {
     // Keys
     private enum Key {
         static let autoStart = "auto_start"
-        static let watchLimitMin = "watch_limit_min"
+        static let watchLimitSec = "watch_limit_sec"
         static let unlockCount = "unlock_count"
         static let isLocked = "is_locked"
         static let timerActive = "timer_active"
@@ -24,7 +24,7 @@ final class Prefs: ObservableObject {
     }
 
     // Defaults
-    private let defaultWatchLimitMin = 30
+    private let defaultWatchLimitSec = 1800
     private let defaultUnlockCount = 3
     private let defaultParentPin = "1234"
     private let maxPinFails = 5
@@ -36,10 +36,15 @@ final class Prefs: ObservableObject {
         didSet { d.set(autoStart, forKey: Key.autoStart) }
     }
 
-    // MARK: - Watch Limit
+    // MARK: - Watch Limit（单位：秒，支持 30 秒测试档）
 
-    @Published var watchLimitMinutes: Int {
-        didSet { d.set(watchLimitMinutes, forKey: Key.watchLimitMin) }
+    @Published var watchLimitSeconds: Int {
+        didSet { d.set(watchLimitSeconds, forKey: Key.watchLimitSec) }
+    }
+
+    /// 时长格式化：<60 秒显示"X 秒"，否则"X 分钟"
+    func formatDuration(_ seconds: Int) -> String {
+        seconds < 60 ? "\(seconds) 秒" : "\(seconds / 60) 分钟"
     }
 
     // MARK: - Unlock Question Count
@@ -109,7 +114,13 @@ final class Prefs: ObservableObject {
 
     private init() {
         autoStart = d.object(forKey: Key.autoStart) as? Bool ?? true
-        watchLimitMinutes = d.object(forKey: Key.watchLimitMin) as? Int ?? defaultWatchLimitMin
+        // 兼容旧版"分钟"存储
+        if let sec = d.object(forKey: Key.watchLimitSec) as? Int {
+            watchLimitSeconds = sec
+        } else {
+            let minutes = d.object(forKey: "watch_limit_min") as? Int ?? defaultWatchLimitSec / 60
+            watchLimitSeconds = minutes * 60
+        }
         unlockCount = d.object(forKey: Key.unlockCount) as? Int ?? defaultUnlockCount
         isLocked = d.bool(forKey: Key.isLocked)
         timerActive = d.bool(forKey: Key.timerActive)
@@ -117,8 +128,8 @@ final class Prefs: ObservableObject {
 
     // MARK: - Helper
 
-    func startTimer(minutes: Int) {
-        timerEndTime = Date().timeIntervalSince1970 * 1000 + Double(minutes) * 60_000
+    func startTimer(seconds: Int) {
+        timerEndTime = Date().timeIntervalSince1970 * 1000 + Double(seconds) * 1000
         timerActive = true
         isLocked = false
         scheduleExpiryNotification()

@@ -12,7 +12,7 @@ struct Index {
   @StorageLink('isLocked') isLocked: boolean = false;
   @StorageLink('timerActive') timerActive: boolean = false;
   @StorageLink('autoStart') autoStart: boolean = true;
-  @StorageLink('watchLimitMinutes') watchLimitMinutes: number = 30;
+  @StorageLink('watchLimitSeconds') watchLimitSeconds: number = 1800;
   @StorageLink('unlockCount') unlockCount: number = 3;
   @StorageLink('parentPin') parentPin: string = '1234';
 
@@ -21,7 +21,12 @@ struct Index {
   @State statusColor: ResourceColor = $r('app.color.text_secondary');
   private tickId: number = -1;
 
-  private readonly timeOptions: number[] = [15, 30, 45, 60, 90, 120];
+  private readonly timeOptions: number[] = [30, 900, 1800, 2700, 3600, 5400, 7200];
+
+  /** 时长格式化：<60 秒显示"X 秒"，否则"X 分钟" */
+  private fmtDuration(sec: number): string {
+    return sec < 60 ? `${sec} 秒` : `${sec / 60} 分钟`;
+  }
   private readonly countOptions: number[] = [3, 5, 10];
 
   aboutToAppear(): void {
@@ -142,22 +147,22 @@ struct Index {
 
             // 观看时长
             Column({ space: 8 }) {
-              Text(`观看时长：${this.watchLimitMinutes} 分钟`)
+              Text(`观看时长：${this.fmtDuration(this.watchLimitSeconds)}`)
                 .fontSize(16)
                 .fontColor($r('app.color.text_primary'))
                 .alignSelf(ItemAlign.Start)
               Row({ space: 8 }) {
-                ForEach(this.timeOptions, (minutes: number) => {
-                  Button(`${minutes}`)
+                ForEach(this.timeOptions, (sec: number) => {
+                  Button(sec < 60 ? `${sec}秒` : `${sec / 60}分`)
                     .fontSize(15)
-                    .fontColor(this.watchLimitMinutes === minutes ? $r('app.color.bg_dark') : $r('app.color.text_primary'))
-                    .backgroundColor(this.watchLimitMinutes === minutes ? $r('app.color.highlight') : $r('app.color.bg_surface_light'))
+                    .fontColor(this.watchLimitSeconds === sec ? $r('app.color.bg_dark') : $r('app.color.text_primary'))
+                    .backgroundColor(this.watchLimitSeconds === sec ? $r('app.color.highlight') : $r('app.color.bg_surface_light'))
                     .layoutWeight(1)
                     .onClick(() => {
-                      this.watchLimitMinutes = minutes;
-                      this.toast(`观看时长设为 ${minutes} 分钟`);
+                      this.watchLimitSeconds = sec;
+                      this.toast(`观看时长设为 ${this.fmtDuration(sec)}`);
                     })
-                }, (minutes: number) => minutes.toString())
+                }, (sec: number) => sec.toString())
               }
               .width('100%')
             }
@@ -220,8 +225,8 @@ struct Index {
               .backgroundColor($r('app.color.correct_green'))
               .width('100%')
               .onClick(() => {
-                AppInit.startTimer(this.watchLimitMinutes);
-                this.toast(`计时开始：${this.watchLimitMinutes} 分钟后锁屏`);
+                AppInit.startTimer(this.watchLimitSeconds);
+                this.toast(`计时开始：${this.fmtDuration(this.watchLimitSeconds)}后锁屏`);
                 this.tick();
               })
 

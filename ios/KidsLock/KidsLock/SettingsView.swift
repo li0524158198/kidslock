@@ -89,7 +89,7 @@ struct SettingsView: View {
             Divider().overlay(Theme.highlight)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("观看时长：\(prefs.watchLimitMinutes) 分钟")
+                Text("观看时长：\(prefs.formatDuration(prefs.watchLimitSeconds))")
                     .foregroundColor(Theme.textPrimary)
                 timePicker
             }
@@ -120,17 +120,17 @@ struct SettingsView: View {
 
     private var timePicker: some View {
         HStack(spacing: 8) {
-            ForEach([15, 30, 45, 60, 90, 120], id: \.self) { minutes in
-                Button(minutes.description) {
-                    prefs.watchLimitMinutes = minutes
+            ForEach([30, 900, 1800, 2700, 3600, 5400, 7200], id: \.self) { sec in
+                Button(sec < 60 ? "\(sec)秒" : "\(sec / 60)分") {
+                    prefs.watchLimitSeconds = sec
                 }
                 .padding(.vertical, 8)
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(prefs.watchLimitMinutes == minutes ? Theme.highlight : Theme.bgSurfaceLight)
+                        .fill(prefs.watchLimitSeconds == sec ? Theme.highlight : Theme.bgSurfaceLight)
                 )
-                .foregroundColor(prefs.watchLimitMinutes == minutes ? Theme.bgDark : Theme.textPrimary)
+                .foregroundColor(prefs.watchLimitSeconds == sec ? Theme.bgDark : Theme.textPrimary)
             }
         }
     }
@@ -159,7 +159,7 @@ struct SettingsView: View {
             sectionTitle("计时控制")
 
             Button {
-                prefs.startTimer(minutes: prefs.watchLimitMinutes)
+                prefs.startTimer(seconds: prefs.watchLimitSeconds)
             } label: {
                 Text(prefs.timerActive ? "重新开始计时" : "开始计时")
                     .frame(maxWidth: .infinity)

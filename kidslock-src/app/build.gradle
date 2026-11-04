@@ -10,8 +10,8 @@ android {
         applicationId "com.kidslock.app"
         minSdk 21
         targetSdk 33
-        versionCode 2
-        versionName "1.2"
+        versionCode 3
+        versionName "1.3"
     }
 
     // 签名配置从本地 keystore.properties 读取（该文件不入库，见 keystore.properties.example）
@@ -37,6 +37,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (ksProps.containsKey('storeFile')) {
+                signingConfig signingConfigs.release
+            }
+        }
+        // debug 与 release 同签名，便于覆盖安装与 run-as 调试
+        debug {
             if (ksProps.containsKey('storeFile')) {
                 signingConfig signingConfigs.release
             }

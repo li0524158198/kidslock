@@ -19,6 +19,7 @@ public class PrefManager {
     // Keys
     private static final String KEY_AUTO_START = "auto_start";
     private static final String KEY_WATCH_LIMIT_MIN = "watch_limit_min";
+    private static final String KEY_WATCH_LIMIT_SEC = "watch_limit_sec";
     private static final String KEY_UNLOCK_COUNT = "unlock_count";
     private static final String KEY_IS_LOCKED = "is_locked";
     private static final String KEY_TIMER_ACTIVE = "timer_active";
@@ -48,13 +49,19 @@ public class PrefManager {
         prefs.edit().putBoolean(KEY_AUTO_START, enabled).apply();
     }
 
-    // --- Watch Limit ---
-    public int getWatchLimitMinutes() {
-        return prefs.getInt(KEY_WATCH_LIMIT_MIN, DEFAULT_WATCH_LIMIT_MIN);
+    // --- Watch Limit（单位：秒，支持 30 秒测试档；兼容旧版"分钟"存储）---
+    public int getWatchLimitSeconds() {
+        int sec = prefs.getInt(KEY_WATCH_LIMIT_SEC, -1);
+        if (sec < 0) {
+            // 迁移旧版分钟值
+            sec = prefs.getInt(KEY_WATCH_LIMIT_MIN, DEFAULT_WATCH_LIMIT_MIN) * 60;
+            setWatchLimitSeconds(sec);
+        }
+        return sec;
     }
 
-    public void setWatchLimitMinutes(int minutes) {
-        prefs.edit().putInt(KEY_WATCH_LIMIT_MIN, minutes).apply();
+    public void setWatchLimitSeconds(int seconds) {
+        prefs.edit().putInt(KEY_WATCH_LIMIT_SEC, seconds).apply();
     }
 
     // --- Unlock Question Count ---
@@ -133,9 +140,9 @@ public class PrefManager {
         prefs.edit().putInt(KEY_PIN_FAIL_COUNT, 0).putLong(KEY_PIN_LOCK_UNTIL, 0).apply();
     }
 
-    // --- Helper: start timer ---
-    public void startTimer(int minutes) {
-        long endTime = System.currentTimeMillis() + (long) minutes * 60 * 1000;
+    // --- Helper: start timer（参数：秒）---
+    public void startTimer(int seconds) {
+        long endTime = System.currentTimeMillis() + (long) seconds * 1000;
         setTimerActive(true);
         setTimerEndTime(endTime);
         setLocked(false);

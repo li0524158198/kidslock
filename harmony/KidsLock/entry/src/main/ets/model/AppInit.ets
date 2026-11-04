@@ -15,7 +15,7 @@ export class AppInit {
     PersistentStorage.persistProp('timerActive', false);
     PersistentStorage.persistProp('timerEndTime', 0);
     PersistentStorage.persistProp('autoStart', true);
-    PersistentStorage.persistProp('watchLimitMinutes', 30);
+    PersistentStorage.persistProp('watchLimitSeconds', 1800);
     PersistentStorage.persistProp('unlockCount', 3);
     PersistentStorage.persistProp('parentPin', '1234');
     PersistentStorage.persistProp('pinFailCount', 0);
@@ -46,8 +46,8 @@ export class AppInit {
     return active && AppInit.now() >= AppInit.getTimerEndTime();
   }
 
-  public static startTimer(minutes: number): void {
-    AppStorage.setOrCreate('timerEndTime', AppInit.now() + minutes * 60 * 1000);
+  public static startTimer(seconds: number): void {
+    AppStorage.setOrCreate('timerEndTime', AppInit.now() + seconds * 1000);
     AppStorage.setOrCreate('timerActive', true);
     AppStorage.setOrCreate('isLocked', false);
   }

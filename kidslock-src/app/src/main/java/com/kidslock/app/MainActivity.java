@@ -91,16 +91,16 @@ public class MainActivity extends AppCompatActivity {
             toast(newVal ? "已开启开机自启" : "已关闭开机自启");
         });
 
-        // 观看时长预设
-        int[] timeButtons = {R.id.btnTime15, R.id.btnTime30, R.id.btnTime45,
-                R.id.btnTime60, R.id.btnTime90, R.id.btnTime120};
-        int[] timeValues = {15, 30, 45, 60, 90, 120};
+        // 观看时长预设（单位：秒，含 30 秒测试档）
+        int[] timeButtons = {R.id.btnTime30s, R.id.btnTime15, R.id.btnTime30,
+                R.id.btnTime45, R.id.btnTime60, R.id.btnTime90, R.id.btnTime120};
+        int[] timeValues = {30, 900, 1800, 2700, 3600, 5400, 7200};
         for (int i = 0; i < timeButtons.length; i++) {
-            final int minutes = timeValues[i];
+            final int seconds = timeValues[i];
             findViewById(timeButtons[i]).setOnClickListener(v -> {
-                pref.setWatchLimitMinutes(minutes);
+                pref.setWatchLimitSeconds(seconds);
                 updateStatus();
-                toast("观看时长设为 " + minutes + " 分钟");
+                toast("观看时长设为 " + formatDuration(seconds));
             });
         }
 
@@ -121,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 开始计时
         findViewById(R.id.btnStartTimer).setOnClickListener(v -> {
-            int minutes = pref.getWatchLimitMinutes();
-            pref.startTimer(minutes);
+            int seconds = pref.getWatchLimitSeconds();
+            pref.startTimer(seconds);
             startLockService();
-            toast("计时开始：" + minutes + " 分钟后锁屏");
+            toast("计时开始：" + formatDuration(seconds) + "后锁屏");
             updateStatus();
         });
 
@@ -189,12 +189,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /** 时长格式化：<60 秒显示"X 秒"，否则显示"X 分钟" */
+    private String formatDuration(int seconds) {
+        if (seconds < 60) {
+            return seconds + " 秒";
+        }
+        return (seconds / 60) + " 分钟";
+    }
+
     private void updateStatus() {
         // 开机自启
         btnAutoStart.setText(pref.isAutoStart() ? "开机自启：已开启" : "开机自启：已关闭");
 
         // 观看时长
-        tvWatchTime.setText("观看时长：" + pref.getWatchLimitMinutes() + " 分钟");
+        tvWatchTime.setText("观看时长：" + formatDuration(pref.getWatchLimitSeconds()));
 
         // 解锁题数
         tvUnlockCount.setText("解锁题数：" + pref.getUnlockCount() + " 道连续答对");
