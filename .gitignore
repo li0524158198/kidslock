@@ -1,0 +1,34 @@
+# ===== 构建环境与产物（本机专用，不入库）=====
+tools/
+dist/
+.zcode-site/
+
+# ===== Android =====
+kidslock-src/.gradle/
+kidslock-src/build/
+kidslock-src/app/build/
+kidslock-src/local.properties
+kidslock-src/keystore.properties
+kidslock-src/kidslock.keystore
+*.apk
+*.keystore
+
+# ===== HarmonyOS =====
+harmony/KidsLock/node_modules/
+harmony/KidsLock/oh_modules/
+harmony/KidsLock/.hvigor/
+harmony/KidsLock/entry/build/
+harmony/KidsLock/entry/.preview/
+harmony/KidsLock/local.properties
+*.hap
+
+# ===== iOS =====
+ios/**/DerivedData/
+ios/**/xcuserdata/
+
+# ===== 通用 =====
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+__pycache__/

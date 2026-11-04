@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "儿童锁屏 · 认字解锁"
+    },
+    {
+      "name": "module_label",
+      "value": "儿童锁屏"
+    },
+    {
+      "name": "ability_desc",
+      "value": "儿童电视锁屏 · 认字解锁"
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="儿童锁屏下载页 — 定时锁屏 · 认字解锁 · 家长PIN">
+<title>儿童锁屏 · 下载安装</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --surface: #1B263B; --surface-light: #243447;
+    --primary: #415A77; --accent: #E0E1DD; --highlight: #778DA9;
+    --green: #2A9D5C; --red: #E63946; --orange: #F4A261;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg); color: var(--accent); min-height: 100vh; padding: 24px 16px 48px;
+  }
+  .wrap { max-width: 520px; margin: 0 auto; }
+  header { text-align: center; padding: 12px 0 24px; }
+  header img { width: 88px; height: 88px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,.45); }
+  h1 { font-size: 22px; margin-top: 14px; letter-spacing: 1px; }
+  .tagline { color: var(--highlight); font-size: 14px; margin-top: 6px; }
+  .features { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 14px; }
+  .features span {
+    font-size: 12px; color: var(--accent); background: var(--surface);
+    border: 1px solid var(--surface-light); padding: 4px 10px; border-radius: 999px;
+  }
+  .card {
+    background: var(--surface); border-radius: 16px; padding: 18px;
+    margin-bottom: 14px; border: 1px solid rgba(119,141,169,.18);
+  }
+  .card.recommend { border-color: var(--green); box-shadow: 0 0 0 1px var(--green), 0 10px 30px rgba(42,157,92,.15); }
+  .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .card-head .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--highlight); flex: none; }
+  .card.recommend .card-head .dot { background: var(--green); }
+  .card-head h2 { font-size: 17px; }
+  .card-head .match { margin-left: auto; font-size: 11px; color: var(--green); border: 1px solid var(--green); padding: 2px 8px; border-radius: 999px; }
+  .card p { font-size: 13px; color: var(--highlight); line-height: 1.7; }
+  .btn {
+    display: block; text-align: center; text-decoration: none; font-size: 16px; font-weight: 600;
+    border-radius: 12px; padding: 14px 16px; margin-top: 12px; transition: transform .06s ease;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-main { background: var(--green); color: #fff; }
+  .btn-sub { background: var(--primary); color: var(--accent); }
+  .btn small { display: block; font-size: 11px; font-weight: 400; opacity: .8; margin-top: 3px; }
+  .steps { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--surface-light); }
+  .steps b { font-size: 13px; color: var(--accent); display: block; margin-bottom: 6px; }
+  .steps ol { padding-left: 18px; }
+  .steps li { font-size: 12.5px; color: var(--highlight); line-height: 1.9; }
+  footer { text-align: center; color: var(--highlight); font-size: 12px; margin-top: 20px; line-height: 1.8; }
+  .hidden { display: none; }
+  #android-tip { background: rgba(244,162,97,.12); border: 1px solid rgba(244,162,97,.35); color: var(--orange); font-size: 12.5px; border-radius: 10px; padding: 10px 12px; margin-top: 12px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="assets/icon.png" alt="儿童锁屏">
+    <h1>儿童锁屏</h1>
+    <div class="tagline">定时锁屏 · 认字解锁 · 家长PIN</div>
+    <div class="features">
+      <span>⏱ 15~120 分钟定时</span>
+      <span>📖 五年级汉字题库</span>
+      <span>🔐 家长PIN解锁</span>
+      <span>🔒 重启仍锁</span>
+    </div>
+  </header>
+
+  <!-- Android -->
+  <div class="card recommend" id="card-android">
+    <div class="card-head">
+      <span class="dot"></span><h2>Android 手机 / 平板 / 电视</h2>
+      <span class="match" id="match-android">本机</span>
+    </div>
+    <p>下载后直接安装，无需注册。支持 Android 5.0 及以上，通用安装包覆盖全部架构。</p>
+    <a class="btn btn-main" href="assets/kidslock-v1.1.apk" download>
+      ⬇ 下载安装（APK · 4.5MB）
+      <small>版本 1.1 · 2026-11 构建（手机布局适配 + 电视悬浮窗修复）</small>
+    </a>
+    <div class="steps">
+      <b>安装步骤</b>
+      <ol>
+        <li>点击上方按钮下载安装包</li>
+        <li>下载完成后点击通知栏或文件管理中的 apk</li>
+        <li>若提示「禁止安装」：设置 → 应用 → 浏览器 → 允许安装未知应用</li>
+        <li>安装完成，桌面打开「儿童锁屏」</li>
+      </ol>
+    </div>
+    <div id="android-tip">📺 小米电视等 Android TV 也可安装：将 apk 拷入 U 盘，用电视「高清播放器」打开安装。</div>
+  </div>
+
+  <!-- HarmonyOS -->
+  <div class="card" id="card-harmony">
+    <div class="card-head">
+      <span class="dot"></span><h2>鸿蒙 HarmonyOS</h2>
+      <span class="match hidden" id="match-harmony">本机</span>
+    </div>
+    <p><b style="color:var(--accent)">HarmonyOS 4.x 及更早版本</b>：系统兼容安卓应用，直接用上方 APK 按钮安装即可。</p>
+    <p style="margin-top:8px"><b style="color:var(--accent)">HarmonyOS NEXT 5.0+（纯血鸿蒙）</b>：系统仅允许应用市场或开发者签名安装，暂不支持浏览器直装。可选方式：
+      ① 华为应用市场上架后搜索安装（推荐正式分发）；② 开发者使用 DevEco Studio 安装。</p>
+    <a class="btn btn-sub" href="assets/entry-default-unsigned.hap" download>
+      ⬇ 鸿蒙安装包（HAP · 161KB · 需签名）
+      <small>供开发者经 DevEco Studio 签名后安装</small>
+    </a>
+  </div>
+
+  <!-- iOS -->
+  <div class="card" id="card-ios">
+    <div class="card-head">
+      <span class="dot"></span><h2>iPhone / iPad</h2>
+      <span class="match hidden" id="match-ios">本机</span>
+    </div>
+    <p>苹果系统政策限制，App 必须通过 App Store 或 TestFlight 分发，无法从浏览器直接安装。</p>
+    <div class="steps">
+      <b>获取方式</b>
+      <ol>
+        <li>上架 App Store：使用已构建的 SwiftUI 工程 + 苹果开发者账号（$99/年）</li>
+        <li>内测分发：TestFlight 邀请链接安装（需付费开发者账号）</li>
+        <li>个人自装：Mac + Xcode 免费证书签名，7 天有效期</li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>
+    儿童锁屏 v1.0 · 观看时长管控 · 答对汉字解锁<br>
+    默认家长PIN：<b>1234</b>（安装后请及时修改）
+  </footer>
+</div>
+<script>
+(function () {
+  var ua = navigator.userAgent;
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var isAndroid = /Android|Adr/i.test(ua);
+  var isHarmonyNext = /OpenHarmony|HarmonyOS NEXT/i.test(ua);
+  function setMatch(id, cardId) {
+    var m = document.getElementById(id), c = document.getElementById(cardId);
+    if (m) m.classList.remove('hidden');
+    if (c) c.classList.add('recommend');
+  }
+  if (isIOS) {
+    setMatch('match-ios', 'card-ios');
+    document.getElementById('card-android').classList.remove('recommend');
+  } else if (isHarmonyNext) {
+    setMatch('match-harmony', 'card-harmony');
+    document.getElementById('card-android').classList.remove('recommend');
+  } else if (isAndroid) {
+    /* Android 保持默认推荐 */
+  }
+})();
+</script>
+</body>
+</html>

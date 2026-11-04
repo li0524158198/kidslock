@@ -1,0 +1,226 @@
+import SwiftUI
+
+/// 设置主界面。
+/// 家长可以在这里配置：自动继续、观看时长、解锁题数、家长PIN码。
+/// 还可以开始/停止计时、立即锁屏、查看剩余时间。
+struct SettingsView: View {
+    @EnvironmentObject var prefs: Prefs
+    @State private var now = Date()
+
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 16) {
+                    statusCard
+                    configCard
+                    controlCard
+                }
+                .padding(16)
+            }
+            .background(Theme.bgDark.ignoresSafeArea())
+            .navigationTitle("儿童锁屏")
+            .navigationBarTitleDisplayMode(.inline)
+        }
+        .navigationViewStyle(.stack)
+        .onReceive(timer) { _ in
+            now = Date()
+            checkExpiry()
+        }
+        .alert("设置家长PIN码（4位数字）", isPresented: $pinDialogShown) {
+            TextField("4位数字", text: $pinInput)
+                .keyboardType(.numberPad)
+            Button("确定") {
+                if pinInput.count == 4 && pinInput.allSatisfy(\.isNumber) {
+                    prefs.parentPin = pinInput
+                }
+            }
+            Button("取消", role: .cancel) {}
+        } message: {
+            Text("当前PIN：\(prefs.parentPin)")
+        }
+    }
+
+    // MARK: - 状态卡片
+
+    private var statusCard: some View {
+        VStack(spacing: 10) {
+            if prefs.isLocked {
+                statusText("当前状态：已锁屏", color: Theme.wrongRed)
+                Text("请答题解锁")
+                    .font(.title3)
+                    .foregroundColor(Theme.textSecondary)
+            } else if prefs.timerActive {
+                let remaining = prefs.remainingMillis
+                if remaining <= 0 {
+                    statusText("当前状态：时间到", color: Theme.wrongRed)
+                } else {
+                    statusText("当前状态：计时中", color: Theme.correctGreen)
+                    Text("剩余时间：\(formatTime(remaining))")
+                        .font(.system(.title2, design: .monospaced))
+                        .foregroundColor(Theme.accent)
+                }
+            } else {
+                statusText("当前状态：未计时", color: Theme.textSecondary)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.bgSurface))
+    }
+
+    private func statusText(_ s: String, color: Color) -> some View {
+        Text(s).font(.headline).foregroundColor(color)
+    }
+
+    // MARK: - 参数配置卡片
+
+    private var configCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            sectionTitle("参数配置")
+
+            Toggle(isOn: $prefs.autoStart) {
+                Text(prefs.autoStart ? "自动继续：已开启" : "自动继续：已关闭")
+                    .foregroundColor(Theme.textPrimary)
+            }
+            .tint(Theme.highlight)
+
+            Divider().overlay(Theme.highlight)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("观看时长：\(prefs.watchLimitMinutes) 分钟")
+                    .foregroundColor(Theme.textPrimary)
+                timePicker
+            }
+
+            Divider().overlay(Theme.highlight)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("解锁题数：\(prefs.unlockCount) 道连续答对")
+                    .foregroundColor(Theme.textPrimary)
+                countPicker
+            }
+
+            Divider().overlay(Theme.highlight)
+
+            Button {
+                showPinDialog()
+            } label: {
+                Text("设置家长PIN")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.primary))
+                    .foregroundColor(Theme.accent)
+            }
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.bgSurface))
+    }
+
+    private var timePicker: some View {
+        HStack(spacing: 8) {
+            ForEach([15, 30, 45, 60, 90, 120], id: \.self) { minutes in
+                Button(minutes.description) {
+                    prefs.watchLimitMinutes = minutes
+                }
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(prefs.watchLimitMinutes == minutes ? Theme.highlight : Theme.bgSurfaceLight)
+                )
+                .foregroundColor(prefs.watchLimitMinutes == minutes ? Theme.bgDark : Theme.textPrimary)
+            }
+        }
+    }
+
+    private var countPicker: some View {
+        HStack(spacing: 8) {
+            ForEach([3, 5, 10], id: \.self) { count in
+                Button(count.description) {
+                    prefs.unlockCount = count
+                }
+                .padding(.vertical, 8)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(prefs.unlockCount == count ? Theme.highlight : Theme.bgSurfaceLight)
+                )
+                .foregroundColor(prefs.unlockCount == count ? Theme.bgDark : Theme.textPrimary)
+            }
+        }
+    }
+
+    // MARK: - 计时控制卡片
+
+    private var controlCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            sectionTitle("计时控制")
+
+            Button {
+                prefs.startTimer(minutes: prefs.watchLimitMinutes)
+            } label: {
+                Text(prefs.timerActive ? "重新开始计时" : "开始计时")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.correctGreen))
+                    .foregroundColor(.white)
+                    .font(.headline)
+            }
+
+            Button {
+                prefs.stopTimer()
+            } label: {
+                Text("停止计时")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.primary))
+                    .foregroundColor(Theme.accent)
+            }
+
+            Button {
+                prefs.stopTimer()
+                prefs.isLocked = true
+            } label: {
+                Text("立即锁屏")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.wrongRed))
+                    .foregroundColor(.white)
+            }
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.bgSurface))
+    }
+
+    private func sectionTitle(_ s: String) -> some View {
+        Text(s).font(.headline).foregroundColor(Theme.highlight)
+    }
+
+    // MARK: - 到时自动锁屏
+
+    private func checkExpiry() {
+        if !prefs.isLocked && prefs.isTimerExpired {
+            prefs.timerActive = false
+            prefs.isLocked = true
+        }
+    }
+
+    // MARK: - 设置 PIN 弹窗
+
+    @State private var pinDialogShown = false
+    @State private var pinInput = ""
+
+    private func showPinDialog() {
+        pinInput = ""
+        pinDialogShown = true
+    }
+
+    // MARK: - Formatting
+
+    private func formatTime(_ millis: Double) -> String {
+        let total = Int(millis / 1000)
+        return String(format: "%02d:%02d", total / 60, total % 60)
+    }
+}

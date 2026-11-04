@@ -1,0 +1,10 @@
+/node_modules
+/oh_modules
+/.hvigor
+/entry/build
+/entry/.preview
+/.clangd
+/.clang-format
+/.clang-tidy
+**/.test
+/.appanalyzer

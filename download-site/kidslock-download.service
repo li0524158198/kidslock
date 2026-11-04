@@ -1,0 +1,15 @@
+[Unit]
+Description=KidsLock Download Site
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/kidslock/download-site
+ExecStart=/usr/bin/python3 /opt/kidslock/download-site/server.py --port 29993
+Restart=always
+RestartSec=3
+StandardOutput=append:/var/log/kidslock-download.log
+StandardError=append:/var/log/kidslock-download.log
+
+[Install]
+WantedBy=multi-user.target
