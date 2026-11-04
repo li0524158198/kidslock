@@ -13,6 +13,7 @@ struct Index {
   @StorageLink('timerActive') timerActive: boolean = false;
   @StorageLink('autoStart') autoStart: boolean = true;
   @StorageLink('watchLimitSeconds') watchLimitSeconds: number = 1800;
+  @StorageLink('bankId') bankId: string = 'chinese_primary';
   @StorageLink('unlockCount') unlockCount: number = 3;
   @StorageLink('parentPin') parentPin: string = '1234';
 
@@ -22,6 +23,18 @@ struct Index {
   private tickId: number = -1;
 
   private readonly timeOptions: number[] = [30, 900, 1800, 2700, 3600, 5400, 7200];
+
+  // 题库（人教版 学科×学段）
+  private readonly bankIds: string[] = [
+    'chinese_primary', 'math_primary', 'english_primary',
+    'chinese_junior', 'math_junior', 'english_junior',
+    'chinese_senior', 'math_senior', 'english_senior',
+  ];
+  private readonly bankLabels: string[] = [
+    '语文·小学', '数学·小学', '英语·小学',
+    '语文·初中', '数学·初中', '英语·初中',
+    '语文·高中', '数学·高中', '英语·高中',
+  ];
 
   /** 时长格式化：<60 秒显示"X 秒"，否则"X 分钟" */
   private fmtDuration(sec: number): string {
@@ -127,6 +140,40 @@ struct Index {
               .fontWeight(FontWeight.Bold)
               .fontColor($r('app.color.highlight'))
               .alignSelf(ItemAlign.Start)
+
+            // 题库选择（人教版 学科×学段，3×3 网格）
+            Column({ space: 8 }) {
+              Text('答题题库')
+                .fontSize(16)
+                .fontColor($r('app.color.text_primary'))
+                .alignSelf(ItemAlign.Start)
+              Grid() {
+                ForEach(this.bankIds, (id: string, idx?: number) => {
+                  GridItem() {
+                    Button(this.bankLabels[idx ?? 0])
+                      .fontSize(14)
+                      .fontColor(this.bankId === id ? $r('app.color.correct_green') : $r('app.color.text_primary'))
+                      .backgroundColor($r('app.color.bg_surface_light'))
+                      .borderWidth(this.bankId === id ? 2 : 0)
+                      .borderColor($r('app.color.correct_green'))
+                      .width('100%')
+                      .height(40)
+                      .onClick(() => {
+                        this.bankId = id;
+                        this.toast('题库已切换');
+                      })
+                  }
+                }, (id: string) => id)
+              }
+              .columnsTemplate('1fr 1fr 1fr')
+              .rowsGap(6)
+              .columnsGap(6)
+              .height(140)
+              .width('100%')
+            }
+            .width('100%')
+
+            Divider().color($r('app.color.highlight')).opacity(0.3)
 
             // 自动继续（原 Android 版「开机自启」）
             Row() {

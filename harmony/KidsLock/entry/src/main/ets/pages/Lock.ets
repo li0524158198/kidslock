@@ -1,9 +1,10 @@
 import { router } from '@kit.ArkUI';
+import { common } from '@kit.AbilityKit';
 import { AppInit } from '../model/AppInit';
-import { CharacterBank, CharEntry } from '../model/CharacterBank';
+import { QuestionBank, Question } from '../model/QuestionBank';
 
 /**
- * 锁屏界面：展示五年级水平汉字，需要连续答对指定题数才能解锁。
+ * 锁屏界面：按所选题库（人教版语数英）出题，连续答对指定题数解锁。
  * - 返回键无效（onBackPress 拦截）
  * - 答错重置计数
  * - 家长可通过输入 PIN 码强制解锁
@@ -15,10 +16,12 @@ struct Lock {
   @StorageLink('unlockCount') unlockCount: number = 3;
 
   // 题目状态
-  private bank: CharacterBank = new CharacterBank();
-  @State currentChar: CharEntry = new CharEntry('誉', 'yù');
-  @State currentOptions: string[] = ['yù', 'bāng', 'cān', 'cāng'];
-  @State correctAnswer: string = 'yù';
+  private qb: QuestionBank = new QuestionBank(getContext(this) as common.UIAbilityContext);
+  @State bankLabel: string = '';
+  @State questionText: string = '';
+  @State bigChar: string | null = null;
+  @State currentOptions: string[] = ['', '', '', ''];
+  @State correctIndex: number = 0;
   @State correctCount: number = 0;
   @State answerLocked: boolean = false;
   @State selectedIndex: number = -1;
@@ -53,12 +56,16 @@ struct Lock {
     return true;
   }
 
-  // ==================== 认字题目 ====================
+  // ==================== 出题（按所选题库） ====================
 
   private loadNextQuestion(): void {
-    this.currentChar = this.bank.getRandomCharacter();
-    this.correctAnswer = this.currentChar.pinyin;
-    this.currentOptions = this.bank.getOptions(this.correctAnswer);
+    const bankId: string = AppStorage.get<string>('bankId') ?? 'chinese_primary';
+    this.bankLabel = this.qb.getLabel(bankId);
+    const q: Question = this.qb.getQuestion(bankId);
+    this.questionText = q.text;
+    this.bigChar = q.bigChar;
+    this.currentOptions = q.options;
+    this.correctIndex = q.answerIndex;
     this.selectedIndex = -1;
     this.answerLocked = false;
     this.feedbackShown = false;
@@ -72,7 +79,7 @@ struct Lock {
     this.selectedIndex = index;
     const selected = this.currentOptions[index];
 
-    if (selected === this.correctAnswer) {
+    if (index === this.correctIndex) {
       // 答对了
       this.wasCorrect = true;
       this.feedbackShown = true;
@@ -105,7 +112,7 @@ struct Lock {
     if (index === this.selectedIndex) {
       return this.wasCorrect ? $r('app.color.correct_green') : $r('app.color.wrong_red');
     }
-    if (!this.wasCorrect && this.currentOptions[index] === this.correctAnswer) {
+    if (!this.wasCorrect && index === this.correctIndex) {
       return $r('app.color.correct_green');
     }
     return $r('app.color.bg_surface');
@@ -115,7 +122,7 @@ struct Lock {
     if (!this.answerLocked || this.selectedIndex < 0) {
       return $r('app.color.text_primary');
     }
-    if (index === this.selectedIndex || (!this.wasCorrect && this.currentOptions[index] === this.correctAnswer)) {
+    if (index === this.selectedIndex || (!this.wasCorrect && index === this.correctIndex)) {
       return Color.White;
     }
     return $r('app.color.text_secondary');
@@ -188,15 +195,28 @@ struct Lock {
         .fontColor($r('app.color.text_secondary'))
         .margin({ top: 16 })
 
-      Text(this.currentChar.character)
-        .fontSize(120)
-        .fontWeight(FontWeight.Bold)
-        .fontColor($r('app.color.accent'))
-        .margin({ top: 8, bottom: 8 })
-
-      Text('这个字读什么？')
-        .fontSize(18)
+      Text(this.bankLabel)
+        .fontSize(14)
         .fontColor($r('app.color.highlight'))
+        .margin({ top: 4 })
+
+      if (this.bigChar !== null) {
+        Text(this.bigChar)
+          .fontSize(120)
+          .fontWeight(FontWeight.Bold)
+          .fontColor($r('app.color.accent'))
+          .margin({ top: 8, bottom: 8 })
+      }
+
+      Text(this.questionText)
+        .fontSize(18)
+        .maxFontSize(32)
+        .minFontSize(14)
+        .height(72)
+        .textAlign(TextAlign.Center)
+        .fontColor($r('app.color.text_primary'))
+        .width('92%')
+        .margin({ top: 6 })
 
       Text(`已答对 ${this.correctCount}/${this.unlockCount} 道题即可解锁`)
         .fontSize(14)

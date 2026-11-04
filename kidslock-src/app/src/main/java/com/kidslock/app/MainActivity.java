@@ -1,28 +1,38 @@
 package com.kidslock.app;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.InputType;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 /**
  * 设置主界面。
- * 家长可以在这里配置：开机自启、观看时长、解锁题数、家长PIN码。
+ * 家长可以在这里配置：开机自启、观看时长、解锁题数、家长PIN码、答题题库（人教版按年级/自定义 CSV）。
  * 还可以开始/停止计时、立即锁屏、查看剩余时间。
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQ_IMPORT_CSV = 41;
+    private static final int REQ_EXPORT_CSV = 42;
 
     private PrefManager pref;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -32,7 +42,16 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAutoStart;
     private TextView tvWatchTime;
     private TextView tvUnlockCount;
-    private Button[] bankButtons;
+
+    private Button[] subjectButtons;
+    private Button[] gradeButtons;
+    private LinearLayout customBankRow;
+    private Button btnImportCsv;
+    private Button btnExportCsv;
+    private String currentSubject = "chinese";
+    private String exportBankId; // 导出挂起的库 id
+
+    private QuestionBank questionBank;
 
     private final Runnable updateRunnable = new Runnable() {
         @Override
@@ -82,23 +101,191 @@ public class MainActivity extends AppCompatActivity {
         tvWatchTime = findViewById(R.id.tvWatchTime);
         tvUnlockCount = findViewById(R.id.tvUnlockCount);
 
-        // 题库选择 3×3 网格（人教版 学科×学段）
-        QuestionBank qb = new QuestionBank(this);
-        int[] bankIds = {R.id.bank00, R.id.bank01, R.id.bank02, R.id.bank10, R.id.bank11,
-                R.id.bank12, R.id.bank20, R.id.bank21, R.id.bank22};
-        bankButtons = new Button[bankIds.length];
-        for (int i = 0; i < bankIds.length; i++) {
-            Button b = findViewById(bankIds[i]);
-            b.setText(qb.getLabel(QuestionBank.BANK_IDS[i]));
+        questionBank = new QuestionBank(this);
+
+        // 学科按钮（语文/数学/英语）
+        int[] subjectIds = {R.id.subject0, R.id.subject1, R.id.subject2};
+        String[] subjects = {"chinese", "math", "english"};
+        subjectButtons = new Button[3];
+        for (int i = 0; i < 3; i++) {
+            Button b = findViewById(subjectIds[i]);
+            final String s = subjects[i];
             b.setOnClickListener(v -> {
-                pref.setBankId((String) v.getTag());
-                updateStatus();
-                toast("题库已切换");
+                currentSubject = s;
+                refreshBankSelection();
             });
-            b.setTag(QuestionBank.BANK_IDS[i]);
-            bankButtons[i] = b;
+            subjectButtons[i] = b;
+        }
+
+        // 年级按钮（12 个）
+        int[] gradeIds = {R.id.grade0, R.id.grade1, R.id.grade2, R.id.grade3, R.id.grade4, R.id.grade5,
+                R.id.grade6, R.id.grade7, R.id.grade8, R.id.grade9, R.id.grade10, R.id.grade11};
+        gradeButtons = new Button[12];
+        for (int g = 0; g < 12; g++) {
+            Button b = findViewById(gradeIds[g]);
+            final int grade = g + 1;
+            b.setOnClickListener(v -> {
+                pref.setBankId(currentSubject + "_g" + grade);
+                updateStatus();
+                toast("题库：语文/数学/英语 · " + grade + " 年级");
+            });
+            gradeButtons[g] = b;
+        }
+
+        // 自定义库列表容器
+        customBankRow = findViewById(R.id.customBankRow);
+
+        // CSV 导入导出
+        btnImportCsv = findViewById(R.id.csvBtn0);
+        btnExportCsv = findViewById(R.id.csvBtn1);
+        btnImportCsv.setOnClickListener(v -> startImportCsv());
+        btnExportCsv.setOnClickListener(v -> startExportCsv());
+
+        syncSubjectFromBank();
+        refreshBankSelection();
+        refreshCustomBankList();
+    }
+
+    /** 从已保存 bankId 反推当前学科（内置库） */
+    private void syncSubjectFromBank() {
+        String id = questionBank.resolveBankId(pref.getBankId());
+        if (id.startsWith("math")) currentSubject = "math";
+        else if (id.startsWith("english")) currentSubject = "english";
+        else if (id.startsWith("chinese")) currentSubject = "chinese";
+    }
+
+    private void refreshBankSelection() {
+        String current = questionBank.resolveBankId(pref.getBankId());
+        // 学科高亮
+        for (int i = 0; i < 3; i++) {
+            boolean sel = current.startsWith(subjectIdOf(i));
+            subjectButtons[i].setBackgroundResource(sel ? R.drawable.btn_bank_selected : R.drawable.btn_settings_bg);
+            subjectButtons[i].setTextColor(sel ? 0xFF2A9D5C : 0xFFE0E1DD);
+        }
+        // 年级高亮（仅当当前库属于该学科）
+        boolean bankInSubject = current.startsWith(subjectIdOf(currentSubject));
+        int curGrade = -1;
+        try {
+            curGrade = Integer.parseInt(current.substring(current.indexOf("_g") + 2));
+        } catch (Exception ignore) {
+        }
+        for (int g = 0; g < 12; g++) {
+            boolean sel = bankInSubject && curGrade == g + 1;
+            gradeButtons[g].setBackgroundResource(sel ? R.drawable.btn_bank_selected : R.drawable.btn_settings_bg);
+            gradeButtons[g].setTextColor(sel ? 0xFF2A9D5C : 0xFFE0E1DD);
+        }
+        refreshCustomBankList();
+    }
+
+    private String subjectIdOf(int index) {
+        return new String[]{"chinese", "math", "english"}[index];
+    }
+
+    private String subjectIdOf(String subject) {
+        return subject;
+    }
+
+    /** 刷新自定义题库横向按钮列表 */
+    private void refreshCustomBankList() {
+        if (customBankRow == null) return;
+        customBankRow.removeAllViews();
+        List<QuestionBank.BankItem> items = questionBank.getBankList();
+        String current = questionBank.resolveBankId(pref.getBankId());
+        for (QuestionBank.BankItem item : items) {
+            if (!item.custom) continue;
+            Button b = new Button(this);
+            b.setText(item.label);
+            b.setAllCaps(false);
+            b.setTextSize(14);
+            b.setBackgroundResource(item.id.equals(current)
+                    ? R.drawable.btn_bank_selected : R.drawable.btn_settings_bg);
+            b.setTextColor(item.id.equals(current) ? 0xFF2A9D5C : 0xFFE0E1DD);
+            b.setPadding(24, 8, 24, 8);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(8, 4, 8, 4);
+            b.setLayoutParams(lp);
+            b.setOnClickListener(v -> {
+                pref.setBankId(item.id);
+                updateStatus();
+                toast("已切换：" + item.label);
+            });
+            customBankRow.addView(b);
         }
     }
+
+    // ==================== CSV 导入导出（SAF，无需存储权限） ====================
+
+    private void startImportCsv() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        try {
+            startActivityForResult(intent, REQ_IMPORT_CSV);
+        } catch (Exception e) {
+            toast("无法打开文件选择器");
+        }
+    }
+
+    private void startExportCsv() {
+        exportBankId = questionBank.resolveBankId(pref.getBankId());
+        String suggest = exportBankId + ".csv";
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/csv");
+        intent.putExtra(Intent.EXTRA_TITLE, suggest);
+        try {
+            startActivityForResult(intent, REQ_EXPORT_CSV);
+        } catch (Exception e) {
+            toast("无法打开文件选择器");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK || data == null || data.getData() == null) return;
+        Uri uri = data.getData();
+        if (requestCode == REQ_IMPORT_CSV) {
+            try (InputStream in = getContentResolver().openInputStream(uri);
+                 BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) sb.append(line).append("\n");
+                String name = queryDisplayName(uri);
+                int count = questionBank.importCsv(name, sb.toString());
+                pref.setBankId(QuestionBank.CUSTOM_PREFIX + name);
+                refreshBankSelection();
+                refreshCustomBankList();
+                toast("导入成功：" + count + " 题");
+            } catch (Exception e) {
+                toast("导入失败：" + e.getMessage());
+            }
+        } else if (requestCode == REQ_EXPORT_CSV) {
+            try (OutputStream out = getContentResolver().openOutputStream(uri)) {
+                String csv = questionBank.exportCsv(exportBankId);
+                out.write(csv.getBytes(StandardCharsets.UTF_8));
+                toast("已导出 " + questionBank.getLabel(exportBankId));
+            } catch (Exception e) {
+                toast("导出失败：" + e.getMessage());
+            }
+        }
+    }
+
+    private String queryDisplayName(Uri uri) {
+        String name = "custom";
+        try (android.database.Cursor c = getContentResolver().query(uri, null, null, null, null)) {
+            if (c != null && c.moveToFirst()) {
+                int idx = c.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                if (idx >= 0) name = c.getString(idx);
+            }
+        } catch (Exception ignore) {
+        }
+        if (name.toLowerCase().endsWith(".csv")) name = name.substring(0, name.length() - 4);
+        return name;
+    }
+
+    // ==================== 原有设置逻辑 ====================
 
     private void setupListeners() {
         // 开机自启
@@ -175,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPinDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("设置家长PIN码（4位数字）");
 
         final EditText input = new EditText(this);
@@ -219,16 +406,11 @@ public class MainActivity extends AppCompatActivity {
         // 开机自启
         btnAutoStart.setText(pref.isAutoStart() ? "开机自启：已开启" : "开机自启：已关闭");
 
-        // 题库选中态高亮
-        String current = pref.getBankId();
-        for (Button b : bankButtons) {
-            boolean sel = current.equals(b.getTag());
-            b.setBackgroundResource(sel ? R.drawable.btn_bank_selected : R.drawable.btn_settings_bg);
-            b.setTextColor(sel ? 0xFF2A9D5C : 0xFFE0E1DD);
+        // 当前题库
+        if (tvWatchTime != null) {
+            String bankLabel = questionBank != null ? questionBank.getLabel(pref.getBankId()) : "";
+            tvWatchTime.setText("当前题库：" + bankLabel + "｜观看时长：" + formatDuration(pref.getWatchLimitSeconds()));
         }
-
-        // 观看时长
-        tvWatchTime.setText("观看时长：" + formatDuration(pref.getWatchLimitSeconds()));
 
         // 解锁题数
         tvUnlockCount.setText("解锁题数：" + pref.getUnlockCount() + " 道连续答对");

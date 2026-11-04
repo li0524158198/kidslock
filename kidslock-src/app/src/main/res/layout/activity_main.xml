@@ -117,58 +117,147 @@
               android:layout_marginTop="@dimen/spacing_large"
               android:layout_marginBottom="@dimen/spacing_small" />
 
-          <!-- 题库选择（人教版 学科×学段，3×3 网格） -->
+          <!-- 题库选择：学科 × 年级（人教版 1-12 年级） -->
           <GridLayout
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:columnCount="3"
-              android:layout_marginBottom="@dimen/spacing_medium">
+              android:columnCount="3">
+              <Button android:id="@+id/subject0"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="语文" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/subject1"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="数学" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/subject2"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="英语" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+          </GridLayout>
 
-              <Button android:id="@+id/bank00"
+          <GridLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnCount="6">
+              <Button android:id="@+id/grade0"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank01"
+                  android:text="一" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade1"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank02"
+                  android:text="二" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade2"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank10"
+                  android:text="三" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade3"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank11"
+                  android:text="四" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade4"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank12"
+                  android:text="五" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade5"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank20"
+                  android:text="六" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade6"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank21"
+                  android:text="初一" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade7"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
-              <Button android:id="@+id/bank22"
+                  android:text="初二" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade8"
                   android:layout_width="0dp" android:layout_columnWeight="1"
                   android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
-                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
-                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+                  android:text="初三" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade9"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="高一" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade10"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="高二" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/grade11"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="高三" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+          </GridLayout>
+
+          <!-- 自定义题库（CSV 导入）与导出 -->
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="我的自定义题库（CSV 导入）"
+              android:textColor="@color/text_secondary"
+              android:textSize="@dimen/text_body"
+              android:layout_marginBottom="@dimen/spacing_small" />
+
+          <HorizontalScrollView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:scrollbars="none"
+              android:layout_marginBottom="@dimen/spacing_small">
+
+              <LinearLayout
+                  android:id="@+id/customBankRow"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal" />
+          </HorizontalScrollView>
+
+          <GridLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnCount="2">
+              <Button android:id="@+id/csvBtn0"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="导入 CSV 题库" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/csvBtn1"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:text="导出当前题库 CSV" android:textSize="@dimen/text_body"
+                  android:background="@drawable/btn_settings_bg" android:textColor="@color/btn_text"
+                  android:focusable="true" android:clickable="true" />
           </GridLayout>
 
 

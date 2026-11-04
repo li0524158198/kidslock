@@ -16,6 +16,7 @@ export class AppInit {
     PersistentStorage.persistProp('timerEndTime', 0);
     PersistentStorage.persistProp('autoStart', true);
     PersistentStorage.persistProp('watchLimitSeconds', 1800);
+    PersistentStorage.persistProp('bankId', 'chinese_primary');
     PersistentStorage.persistProp('unlockCount', 3);
     PersistentStorage.persistProp('parentPin', '1234');
     PersistentStorage.persistProp('pinFailCount', 0);
