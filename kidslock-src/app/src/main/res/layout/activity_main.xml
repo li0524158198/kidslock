@@ -107,15 +107,70 @@
                 android:clickable="true" />
         </GridLayout>
 
-        <!-- ===== 参数配置 ===== -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/section_config"
-            android:textColor="@color/highlight"
-            android:textSize="@dimen/text_subtitle"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginBottom="@dimen/spacing_small" />
+          <!-- ===== 参数配置 ===== -->
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/section_config"
+              android:textColor="@color/highlight"
+              android:textSize="@dimen/text_subtitle"
+              android:layout_marginTop="@dimen/spacing_large"
+              android:layout_marginBottom="@dimen/spacing_small" />
+
+          <!-- 题库选择（人教版 学科×学段，3×3 网格） -->
+          <GridLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:columnCount="3"
+              android:layout_marginBottom="@dimen/spacing_medium">
+
+              <Button android:id="@+id/bank00"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank01"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank02"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank10"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank11"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank12"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank20"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank21"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+              <Button android:id="@+id/bank22"
+                  android:layout_width="0dp" android:layout_columnWeight="1"
+                  android:layout_height="@dimen/btn_height" android:layout_margin="@dimen/btn_margin"
+                  android:textSize="@dimen/text_body" android:background="@drawable/btn_settings_bg"
+                  android:textColor="@color/btn_text" android:focusable="true" android:clickable="true" />
+          </GridLayout>
+
 
         <!-- 开机自启 -->
         <Button

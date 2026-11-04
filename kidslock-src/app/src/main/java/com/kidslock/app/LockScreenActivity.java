@@ -28,18 +28,18 @@ import java.util.List;
 public class LockScreenActivity extends AppCompatActivity {
 
     private PrefManager pref;
-    private CharacterBank bank;
+    private QuestionBank questionBank;
 
     // 题目状态
-    private CharacterBank.CharEntry currentChar;
-    private List<String> currentOptions;
-    private String correctAnswer;
+    private QuestionBank.Question currentQuestion;
     private int correctCount = 0;
     private int requiredCount;
 
-    // Views - 认字模式
+    // Views - 答题主界面
     private View layoutMain;
+    private TextView tvQuestion;
     private TextView tvCharacter;
+    private TextView tvBankName;
     private TextView tvProgress;
     private TextView tvFeedback;
     private Button[] optionButtons;
@@ -57,7 +57,7 @@ public class LockScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lock_screen);
 
         pref = new PrefManager(this);
-        bank = new CharacterBank();
+        questionBank = new QuestionBank(this);
         requiredCount = pref.getUnlockCount();
 
         // 电视保持横屏；手机/平板跟随设备自然方向（默认竖屏更自然）
@@ -80,9 +80,11 @@ public class LockScreenActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        // 认字主界面
+        // 答题主界面
         layoutMain = findViewById(R.id.layoutMain);
+        tvQuestion = findViewById(R.id.tvQuestion);
         tvCharacter = findViewById(R.id.tvCharacter);
+        tvBankName = findViewById(R.id.tvBankName);
         tvProgress = findViewById(R.id.tvProgress);
         tvFeedback = findViewById(R.id.tvFeedback);
 
@@ -118,7 +120,7 @@ public class LockScreenActivity extends AppCompatActivity {
             updatePinDisplay();
         });
         findViewById(R.id.btnPinBack).setOnClickListener(v -> {
-            // 返回认字界面
+            // 返回答题界面
             layoutPin.setVisibility(View.GONE);
             layoutMain.setVisibility(View.VISIBLE);
             pinInput.setLength(0);
@@ -126,17 +128,27 @@ public class LockScreenActivity extends AppCompatActivity {
         });
     }
 
-    // ==================== 认字题目 ====================
+    // ==================== 出题（按所选题库） ====================
 
     private void loadNextQuestion() {
-        currentChar = bank.getRandomCharacter();
-        correctAnswer = currentChar.pinyin;
-        currentOptions = bank.getOptions(correctAnswer);
+        String bankId = pref.getBankId();
+        currentQuestion = questionBank.getQuestion(bankId);
 
-        tvCharacter.setText(currentChar.character);
+        String label = questionBank.getLabel(bankId);
+        tvBankName.setText(label);
 
-        for (int i = 0; i < optionButtons.length && i < currentOptions.size(); i++) {
-            optionButtons[i].setText(currentOptions.get(i));
+        // 字音题（语文）显示大字；其他题型显示题干（自适应字号）
+        boolean isCharQuestion = currentQuestion.bigChar != null;
+        tvCharacter.setVisibility(isCharQuestion ? View.VISIBLE : View.GONE);
+        if (isCharQuestion) {
+            tvCharacter.setText(currentQuestion.bigChar);
+            tvQuestion.setText("这个字读什么？");
+        } else {
+            tvQuestion.setText(currentQuestion.text);
+        }
+
+        for (int i = 0; i < optionButtons.length && i < currentQuestion.options.size(); i++) {
+            optionButtons[i].setText(currentQuestion.options.get(i));
             optionButtons[i].setBackgroundResource(R.drawable.btn_option_bg);
             optionButtons[i].setEnabled(true);
         }
@@ -151,8 +163,8 @@ public class LockScreenActivity extends AppCompatActivity {
             b.setEnabled(false);
         }
 
-        String selected = currentOptions.get(index);
-        if (selected.equals(correctAnswer)) {
+        String selected = currentQuestion.options.get(index);
+        if (selected.equals(currentQuestion.options.get(currentQuestion.answerIndex))) {
             // 答对了
             correctCount++;
             optionButtons[index].setBackgroundResource(R.drawable.btn_option_correct);
@@ -171,8 +183,9 @@ public class LockScreenActivity extends AppCompatActivity {
             correctCount = 0;
             optionButtons[index].setBackgroundResource(R.drawable.btn_option_wrong);
             // 高亮正确答案
-            for (int i = 0; i < currentOptions.size(); i++) {
-                if (currentOptions.get(i).equals(correctAnswer)) {
+            String correct = currentQuestion.options.get(currentQuestion.answerIndex);
+            for (int i = 0; i < currentQuestion.options.size(); i++) {
+                if (currentQuestion.options.get(i).equals(correct)) {
                     optionButtons[i].setBackgroundResource(R.drawable.btn_option_correct);
                     break;
                 }

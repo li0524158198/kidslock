@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lock_bg">
@@ -28,7 +29,16 @@
             android:textStyle="bold"
             android:layout_marginBottom="@dimen/spacing_small" />
 
-        <!-- 汉字显示 -->
+        <!-- 当前题库 -->
+        <TextView
+            android:id="@+id/tvBankName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/highlight"
+            android:textSize="@dimen/text_body"
+            android:layout_marginBottom="@dimen/spacing_small" />
+
+        <!-- 汉字显示（仅字音题） -->
         <TextView
             android:id="@+id/tvCharacter"
             android:layout_width="wrap_content"
@@ -38,13 +48,21 @@
             android:textStyle="bold"
             android:layout_marginVertical="@dimen/spacing_medium" />
 
-        <!-- 提问 -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- 题干（自适应字号：文本越长字号越小，确保完整清晰显示） -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvQuestion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/what_pronounce"
-            android:textColor="@color/text_secondary"
+            android:minHeight="48dp"
+            android:gravity="center"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/text_subtitle"
+            android:maxLines="4"
+            android:textAllCaps="false"
+                app:autoSizeTextType="uniform"
+            app:autoSizeMinTextSize="14sp"
+            app:autoSizeMaxTextSize="34sp"
+            android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="@dimen/spacing_large" />
 
         <!-- 选项按钮 -->
@@ -65,6 +83,10 @@
                 android:background="@drawable/btn_option_bg"
                 android:textColor="@color/btn_text"
                 android:textSize="@dimen/text_button"
+                android:textAllCaps="false"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="24sp"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/btnOption4"
@@ -80,6 +102,10 @@
                 android:background="@drawable/btn_option_bg"
                 android:textColor="@color/btn_text"
                 android:textSize="@dimen/text_button"
+                android:textAllCaps="false"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="24sp"
                 android:focusable="true"
                 android:clickable="true" />
 
@@ -93,6 +119,10 @@
                 android:background="@drawable/btn_option_bg"
                 android:textColor="@color/btn_text"
                 android:textSize="@dimen/text_button"
+                android:textAllCaps="false"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="24sp"
                 android:focusable="true"
                 android:clickable="true" />
 
@@ -106,6 +136,10 @@
                 android:background="@drawable/btn_option_bg"
                 android:textColor="@color/btn_text"
                 android:textSize="@dimen/text_button"
+                android:textAllCaps="false"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="24sp"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/btnOption3"

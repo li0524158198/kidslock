@@ -21,6 +21,7 @@ public class PrefManager {
     private static final String KEY_WATCH_LIMIT_MIN = "watch_limit_min";
     private static final String KEY_WATCH_LIMIT_SEC = "watch_limit_sec";
     private static final String KEY_UNLOCK_COUNT = "unlock_count";
+    private static final String KEY_BANK_ID = "bank_id";
     private static final String KEY_IS_LOCKED = "is_locked";
     private static final String KEY_TIMER_ACTIVE = "timer_active";
     private static final String KEY_TIMER_END_TIME = "timer_end_time";
@@ -71,6 +72,15 @@ public class PrefManager {
 
     public void setUnlockCount(int count) {
         prefs.edit().putInt(KEY_UNLOCK_COUNT, count).apply();
+    }
+
+    // --- 题库选择（人教版 学科×学段）---
+    public String getBankId() {
+        return prefs.getString(KEY_BANK_ID, "chinese_primary");
+    }
+
+    public void setBankId(String bankId) {
+        prefs.edit().putString(KEY_BANK_ID, bankId).apply();
     }
 
     // --- Lock State ---

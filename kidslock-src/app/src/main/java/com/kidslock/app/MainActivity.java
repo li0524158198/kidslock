@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAutoStart;
     private TextView tvWatchTime;
     private TextView tvUnlockCount;
+    private Button[] bankButtons;
 
     private final Runnable updateRunnable = new Runnable() {
         @Override
@@ -80,6 +81,23 @@ public class MainActivity extends AppCompatActivity {
         btnAutoStart = findViewById(R.id.btnAutoStart);
         tvWatchTime = findViewById(R.id.tvWatchTime);
         tvUnlockCount = findViewById(R.id.tvUnlockCount);
+
+        // 题库选择 3×3 网格（人教版 学科×学段）
+        QuestionBank qb = new QuestionBank(this);
+        int[] bankIds = {R.id.bank00, R.id.bank01, R.id.bank02, R.id.bank10, R.id.bank11,
+                R.id.bank12, R.id.bank20, R.id.bank21, R.id.bank22};
+        bankButtons = new Button[bankIds.length];
+        for (int i = 0; i < bankIds.length; i++) {
+            Button b = findViewById(bankIds[i]);
+            b.setText(qb.getLabel(QuestionBank.BANK_IDS[i]));
+            b.setOnClickListener(v -> {
+                pref.setBankId((String) v.getTag());
+                updateStatus();
+                toast("题库已切换");
+            });
+            b.setTag(QuestionBank.BANK_IDS[i]);
+            bankButtons[i] = b;
+        }
     }
 
     private void setupListeners() {
@@ -200,6 +218,14 @@ public class MainActivity extends AppCompatActivity {
     private void updateStatus() {
         // 开机自启
         btnAutoStart.setText(pref.isAutoStart() ? "开机自启：已开启" : "开机自启：已关闭");
+
+        // 题库选中态高亮
+        String current = pref.getBankId();
+        for (Button b : bankButtons) {
+            boolean sel = current.equals(b.getTag());
+            b.setBackgroundResource(sel ? R.drawable.btn_bank_selected : R.drawable.btn_settings_bg);
+            b.setTextColor(sel ? 0xFF2A9D5C : 0xFFE0E1DD);
+        }
 
         // 观看时长
         tvWatchTime.setText("观看时长：" + formatDuration(pref.getWatchLimitSeconds()));
