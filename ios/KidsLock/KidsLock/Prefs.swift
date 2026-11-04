@@ -15,6 +15,7 @@ final class Prefs: ObservableObject {
         static let autoStart = "auto_start"
         static let watchLimitSec = "watch_limit_sec"
         static let unlockCount = "unlock_count"
+        static let bankId = "bank_id"
         static let isLocked = "is_locked"
         static let timerActive = "timer_active"
         static let timerEndTime = "timer_end_time"
@@ -78,6 +79,12 @@ final class Prefs: ObservableObject {
         timerActive && Date().timeIntervalSince1970 * 1000 >= timerEndTime
     }
 
+    // MARK: - 题库选择（人教版 学科×年级 / 自定义）
+
+    @Published var bankId: String {
+        didSet { d.set(bankId, forKey: Key.bankId) }
+    }
+
     // MARK: - Parent PIN
 
     var parentPin: String {
@@ -122,6 +129,7 @@ final class Prefs: ObservableObject {
             watchLimitSeconds = minutes * 60
         }
         unlockCount = d.object(forKey: Key.unlockCount) as? Int ?? defaultUnlockCount
+        bankId = d.string(forKey: Key.bankId) ?? "chinese_g1"
         isLocked = d.bool(forKey: Key.isLocked)
         timerActive = d.bool(forKey: Key.timerActive)
     }

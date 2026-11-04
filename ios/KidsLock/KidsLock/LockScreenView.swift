@@ -1,16 +1,18 @@
 import SwiftUI
 
-/// 锁屏界面：展示五年级水平汉字，需要连续答对指定题数才能解锁。
+/// 锁屏界面：按所选题库（人教版语数英，1-12 年级 / 自定义 CSV）出题。
+/// - 语文拼音题显示大字；其他题型显示题干（自适应字号）
 /// - 答错重置计数
 /// - 家长可通过输入 PIN 码强制解锁
 struct LockScreenView: View {
     @EnvironmentObject var prefs: Prefs
-    @State private var bank = CharacterBank()
 
     // 题目状态
-    @State private var currentChar: CharEntry = CharacterBank.bank[0]
-    @State private var currentOptions: [String] = []
-    @State private var correctAnswer = ""
+    @State private var questionText = ""
+    @State private var bigChar: String? = nil
+    @State private var bankLabel = ""
+    @State private var options: [String] = ["", "", "", ""]
+    @State private var answerIndex = 0
     @State private var correctCount = 0
     @State private var answerLocked = false
     @State private var selectedIndex: Int? = nil
@@ -39,10 +41,9 @@ struct LockScreenView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.bgDark.ignoresSafeArea())
         .onAppear { loadNextQuestion() }
-        .persistentSystemOverlays(.hidden)
     }
 
-    // MARK: - 认字答题
+    // MARK: - 答题视图
 
     private var quizView: some View {
         VStack(spacing: 12) {
@@ -51,29 +52,38 @@ struct LockScreenView: View {
                 .foregroundColor(Theme.textSecondary)
                 .padding(.top, 8)
 
-            Text(currentChar.character)
-                .font(.system(size: 140, weight: .bold))
-                .foregroundColor(Theme.accent)
-                .minimumScaleFactor(0.5)
-                .lineLimit(1)
-
-            Text("这个字读什么？")
-                .font(.title3)
+            Text(bankLabel)
+                .font(.subheadline)
                 .foregroundColor(Theme.highlight)
+
+            // 大字（仅字音题）或题干（自适应字号）
+            if let ch = bigChar {
+                Text(ch)
+                    .font(.system(size: 120, weight: .bold))
+                    .foregroundColor(Theme.accent)
+                    .minimumScaleFactor(0.5)
+                    .lineLimit(1)
+            }
+            Text(questionText)
+                .font(.title3)
+                .foregroundColor(Theme.textPrimary)
+                .multilineTextAlignment(.center)
+                .lineLimit(4)
+                .minimumScaleFactor(0.5)
+                .padding(.horizontal, 24)
+                .frame(minHeight: 48)
 
             Text("已答对 \(correctCount)/\(requiredCount) 道题即可解锁")
                 .font(.subheadline)
                 .foregroundColor(Theme.textSecondary)
 
-            // 反馈
             Text(feedbackText)
                 .font(.headline)
                 .foregroundColor(feedbackShown ? (wasCorrect ? Theme.correctGreen : Theme.wrongRed) : .clear)
                 .frame(height: 28)
 
-            // 4个选项 2x2
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                ForEach(Array(currentOptions.enumerated()), id: \.offset) { idx, option in
+                ForEach(Array(options.enumerated()), id: \.offset) { idx, option in
                     optionButton(index: idx, text: option)
                 }
             }
@@ -97,9 +107,12 @@ struct LockScreenView: View {
             onOptionSelected(index)
         } label: {
             Text(text)
-                .font(.title2.weight(.medium))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
+                .font(.body.weight(.medium))
+                .lineLimit(2)
+                .minimumScaleFactor(0.5)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, minHeight: 52)
+                .padding(.horizontal, 8)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(state.background)
@@ -114,7 +127,7 @@ struct LockScreenView: View {
     }
 
     private func buttonState(for index: Int) -> (background: Color, foreground: Color, border: Color, borderWidth: CGFloat) {
-        if !answerLocked || selectedIndex == nil {
+        guard answerLocked, selectedIndex != nil else {
             return (Theme.bgSurface, Theme.textPrimary, Theme.primary, 1)
         }
         if index == selectedIndex {
@@ -122,8 +135,7 @@ struct LockScreenView: View {
                 ? (Theme.correctGreen, .white, Theme.correctGreen, 0)
                 : (Theme.wrongRed, .white, Theme.wrongRed, 0)
         }
-        if !wasCorrect && currentOptions.indices.contains(index) && currentOptions[index] == correctAnswer {
-            // 答错时高亮正确答案
+        if !wasCorrect && options.indices.contains(index) && index == answerIndex {
             return (Theme.correctGreen.opacity(0.25), Theme.correctGreen, Theme.correctGreen, 1)
         }
         return (Theme.bgSurface.opacity(0.5), Theme.textSecondary, Theme.primary.opacity(0.5), 1)
@@ -133,22 +145,27 @@ struct LockScreenView: View {
         wasCorrect ? "答对了！" : "答错了，重新开始！"
     }
 
+    // MARK: - 出题
+
     private func loadNextQuestion() {
-        currentChar = bank.getRandomCharacter()
-        correctAnswer = currentChar.pinyin
-        currentOptions = bank.getOptions(correctPinyin: correctAnswer)
+        let bankId = prefs.bankId
+        bankLabel = QuestionBank.shared.label(bankId)
+        let q = QuestionBank.shared.getQuestion(bankId)
+        questionText = q.text
+        bigChar = q.bigChar
+        options = q.options
+        answerIndex = q.answerIndex
         selectedIndex = nil
         answerLocked = false
         feedbackShown = false
     }
 
     private func onOptionSelected(_ index: Int) {
-        guard !answerLocked, currentOptions.indices.contains(index) else { return }
+        guard !answerLocked, options.indices.contains(index) else { return }
         answerLocked = true
         selectedIndex = index
-        let selected = currentOptions[index]
 
-        if selected == correctAnswer {
+        if index == answerIndex {
             wasCorrect = true
             feedbackShown = true
             correctCount += 1

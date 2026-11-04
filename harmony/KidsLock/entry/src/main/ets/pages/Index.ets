@@ -1,5 +1,10 @@
 import { router, promptAction } from '@kit.ArkUI';
 import { AppInit } from '../model/AppInit';
+import { QuestionBank } from '../model/QuestionBank';
+import { common } from '@kit.AbilityKit';
+import { util } from '@kit.ArkTS';
+import { fileIo as fs } from '@kit.CoreFileKit';
+import { picker } from '@kit.CoreFileKit';
 
 /**
  * 设置主界面。
@@ -25,16 +30,82 @@ struct Index {
   private readonly timeOptions: number[] = [30, 900, 1800, 2700, 3600, 5400, 7200];
 
   // 题库（人教版 学科×学段）
-  private readonly bankIds: string[] = [
-    'chinese_primary', 'math_primary', 'english_primary',
-    'chinese_junior', 'math_junior', 'english_junior',
-    'chinese_senior', 'math_senior', 'english_senior',
-  ];
-  private readonly bankLabels: string[] = [
-    '语文·小学', '数学·小学', '英语·小学',
-    '语文·初中', '数学·初中', '英语·初中',
-    '语文·高中', '数学·高中', '英语·高中',
-  ];
+  @State currentSubject: number = 0;
+  @State customIds: string[] = [];
+  private qb: QuestionBank | null = null;
+
+  private customLabelOf(cid: string): string {
+    const qb = this.qb;
+    return qb !== null ? qb.getCustomLabel(cid) : cid;
+  }
+
+  private refreshCustomIds(): void {
+    const qb = this.qb;
+    if (qb !== null) {
+      this.customIds = qb.getCustomIds();
+    }
+  }
+
+  private importCsv(): void {
+    const qb = this.qb;
+    if (qb === null) {
+      return;
+    }
+    const docSelectOptions = new picker.DocumentSelectOptions();
+    docSelectOptions.maxSelectNumber = 1;
+    docSelectOptions.fileSuffixFilters = ['.csv'];
+    const docPicker = new picker.DocumentViewPicker(this.getUIContext().getHostContext() as common.UIAbilityContext);
+    docPicker.select(docSelectOptions).then((result: Array<string>) => {
+      if (result.length === 0) {
+        return;
+      }
+      const uri = result[0];
+      const file = fs.openSync(uri, fs.OpenMode.READ_ONLY);
+      const stat = fs.statSync(file.fd);
+      const buf = new ArrayBuffer(stat.size);
+      fs.readSync(file.fd, buf);
+      fs.closeSync(file);
+      const text = util.TextDecoder.create('utf-8').decodeToString(new Uint8Array(buf));
+      let name = 'custom';
+      const parts = uri.split('/');
+      const last = parts[parts.length - 1];
+      if (last.indexOf('my_test') >= 0 || last.indexOf('.') >= 0) {
+        const seg = last.split('/').pop() ?? 'custom';
+        name = seg.endsWith('.csv') ? seg.substring(0, seg.length - 4) : seg;
+      }
+      try {
+        const count = qb.importCsv(name, text);
+        this.bankId = QuestionBank.CUSTOM_PREFIX + name;
+        this.refreshCustomIds();
+        this.toast(`导入成功：${count} 题`);
+      } catch (err) {
+        this.toast('导入失败：' + JSON.stringify(err));
+      }
+    }).catch(() => {
+    });
+  }
+
+  private exportCsv(): void {
+    const qb = this.qb;
+    if (qb === null) {
+      return;
+    }
+    const saveOptions = new picker.DocumentSaveOptions();
+    saveOptions.newFileNames = [this.bankId + '.csv'];
+    const docPicker = new picker.DocumentViewPicker(this.getUIContext().getHostContext() as common.UIAbilityContext);
+    docPicker.save(saveOptions).then((result: Array<string>) => {
+      if (result.length === 0) {
+        return;
+      }
+      const uri = result[0];
+      const csv = qb.exportCsv(this.bankId);
+      const file = fs.openSync(uri, fs.OpenMode.READ_WRITE | fs.OpenMode.TRUNC);
+      fs.writeSync(file.fd, csv);
+      fs.closeSync(file);
+      this.toast('已导出');
+    }).catch(() => {
+    });
+  }
 
   /** 时长格式化：<60 秒显示"X 秒"，否则"X 分钟" */
   private fmtDuration(sec: number): string {
@@ -43,6 +114,8 @@ struct Index {
   private readonly countOptions: number[] = [3, 5, 10];
 
   aboutToAppear(): void {
+    this.qb = new QuestionBank(getContext(this) as common.UIAbilityContext);
+    this.refreshCustomIds();
     this.tick();
     this.tickId = setInterval(() => {
       this.tick();
@@ -141,34 +214,94 @@ struct Index {
               .fontColor($r('app.color.highlight'))
               .alignSelf(ItemAlign.Start)
 
-            // 题库选择（人教版 学科×学段，3×3 网格）
+            // 题库选择：学科 × 年级（人教版 1-12 年级）+ 自定义库 + CSV
             Column({ space: 8 }) {
               Text('答题题库')
                 .fontSize(16)
                 .fontColor($r('app.color.text_primary'))
                 .alignSelf(ItemAlign.Start)
+              Row({ space: 6 }) {
+                ForEach(QuestionBank.SUBJECTS, (sub: string, si?: number) => {
+                  Button(QuestionBank.SUBJECT_NAMES[si ?? 0])
+                    .fontSize(14)
+                    .fontColor(this.currentSubject === (si ?? 0) ? $r('app.color.correct_green') : $r('app.color.text_primary'))
+                    .backgroundColor($r('app.color.bg_surface_light'))
+                    .borderWidth(this.currentSubject === (si ?? 0) ? 2 : 0)
+                    .borderColor($r('app.color.correct_green'))
+                    .layoutWeight(1)
+                    .height(38)
+                    .onClick(() => {
+                      this.currentSubject = si ?? 0;
+                    })
+                }, (sub: string) => sub)
+              }
+              .width('100%')
               Grid() {
-                ForEach(this.bankIds, (id: string, idx?: number) => {
+                ForEach(QuestionBank.GRADE_NAMES, (gname: string, gi?: number) => {
                   GridItem() {
-                    Button(this.bankLabels[idx ?? 0])
-                      .fontSize(14)
-                      .fontColor(this.bankId === id ? $r('app.color.correct_green') : $r('app.color.text_primary'))
+                    Button(gname.replace('年级', '').replace('高一', '高一').length > 2 ? gname : gname)
+                      .fontSize(13)
+                      .fontColor(this.bankId === QuestionBank.builtinId(this.currentSubject, gi ?? 0)
+                        ? $r('app.color.correct_green') : $r('app.color.text_primary'))
                       .backgroundColor($r('app.color.bg_surface_light'))
-                      .borderWidth(this.bankId === id ? 2 : 0)
+                      .borderWidth(this.bankId === QuestionBank.builtinId(this.currentSubject, gi ?? 0) ? 2 : 0)
                       .borderColor($r('app.color.correct_green'))
                       .width('100%')
-                      .height(40)
+                      .height(38)
                       .onClick(() => {
-                        this.bankId = id;
+                        this.bankId = QuestionBank.builtinId(this.currentSubject, gi ?? 0);
                         this.toast('题库已切换');
                       })
                   }
-                }, (id: string) => id)
+                }, (gname: string) => gname)
               }
-              .columnsTemplate('1fr 1fr 1fr')
+              .columnsTemplate('1fr 1fr 1fr 1fr 1fr 1fr')
               .rowsGap(6)
               .columnsGap(6)
-              .height(140)
+              .height(100)
+              .width('100%')
+
+              if (this.customIds.length > 0) {
+                Text('我的自定义题库')
+                  .fontSize(14)
+                  .fontColor($r('app.color.text_secondary'))
+                  .alignSelf(ItemAlign.Start)
+                ForEach(this.customIds, (cid: string) => {
+                  Button(this.customLabelOf(cid))
+                    .fontSize(13)
+                    .fontColor(this.bankId === cid ? $r('app.color.correct_green') : $r('app.color.text_primary'))
+                    .backgroundColor($r('app.color.bg_surface_light'))
+                    .borderWidth(this.bankId === cid ? 2 : 0)
+                    .borderColor($r('app.color.correct_green'))
+                    .width('100%')
+                    .height(36)
+                    .onClick(() => {
+                      this.bankId = cid;
+                      this.toast('题库已切换');
+                    })
+                }, (cid: string) => cid)
+              }
+
+              Row({ space: 6 }) {
+                Button('导入 CSV 题库')
+                  .fontSize(14)
+                  .fontColor($r('app.color.text_primary'))
+                  .backgroundColor($r('app.color.primary'))
+                  .layoutWeight(1)
+                  .height(38)
+                  .onClick(() => {
+                    this.importCsv();
+                  })
+                Button('导出当前题库 CSV')
+                  .fontSize(14)
+                  .fontColor($r('app.color.text_primary'))
+                  .backgroundColor($r('app.color.primary'))
+                  .layoutWeight(1)
+                  .height(38)
+                  .onClick(() => {
+                    this.exportCsv();
+                  })
+              }
               .width('100%')
             }
             .width('100%')

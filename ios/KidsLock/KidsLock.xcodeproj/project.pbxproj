@@ -7,7 +7,7 @@
 /* Begin PBXBuildFile section */
 		A10000000000000000000001 /* KidsLockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* KidsLockApp.swift */; };
 		A10000000000000000000002 /* Prefs.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* Prefs.swift */; };
-		A10000000000000000000003 /* CharacterBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* CharacterBank.swift */; };
+		A10000000000000000000003 /* QuestionBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* QuestionBank.swift */; };
 		A10000000000000000000004 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* Theme.swift */; };
 		A10000000000000000000005 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* SettingsView.swift */; };
 		A10000000000000000000006 /* LockScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* LockScreenView.swift */; };
@@ -18,7 +18,7 @@
 /* Begin PBXFileReference section */
 		B10000000000000000000001 /* KidsLockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KidsLockApp.swift; sourceTree = "<group>"; };
 		B10000000000000000000002 /* Prefs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prefs.swift; sourceTree = "<group>"; };
-		B10000000000000000000003 /* CharacterBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterBank.swift; sourceTree = "<group>"; };
+		B10000000000000000000003 /* QuestionBank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionBank.swift; sourceTree = "<group>"; };
 		B10000000000000000000004 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		B10000000000000000000005 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B10000000000000000000006 /* LockScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenView.swift; sourceTree = "<group>"; };
@@ -53,7 +53,7 @@
 			children = (
 				B10000000000000000000001 /* KidsLockApp.swift */,
 				B10000000000000000000002 /* Prefs.swift */,
-				B10000000000000000000003 /* CharacterBank.swift */,
+				B10000000000000000000003 /* QuestionBank.swift */,
 				B10000000000000000000004 /* Theme.swift */,
 				B10000000000000000000005 /* SettingsView.swift */,
 				B10000000000000000000006 /* LockScreenView.swift */,
@@ -151,7 +151,7 @@
 			files = (
 				A10000000000000000000001 /* KidsLockApp.swift in Sources */,
 				A10000000000000000000002 /* Prefs.swift in Sources */,
-				A10000000000000000000003 /* CharacterBank.swift in Sources */,
+				A10000000000000000000003 /* QuestionBank.swift in Sources */,
 				A10000000000000000000004 /* Theme.swift in Sources */,
 				A10000000000000000000005 /* SettingsView.swift in Sources */,
 				A10000000000000000000006 /* LockScreenView.swift in Sources */,

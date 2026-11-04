@@ -6,6 +6,11 @@ import SwiftUI
 struct SettingsView: View {
     @EnvironmentObject var prefs: Prefs
     @State private var now = Date()
+    @State private var currentSubject = 0
+    @State private var refreshTick = 0
+    @State private var showImporter = false
+    @State private var showExporter = false
+    private var qb: QuestionBank { QuestionBank.shared }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -14,6 +19,7 @@ struct SettingsView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     statusCard
+                    bankCard
                     configCard
                     controlCard
                 }
@@ -72,6 +78,103 @@ struct SettingsView: View {
 
     private func statusText(_ s: String, color: Color) -> some View {
         Text(s).font(.headline).foregroundColor(color)
+    }
+
+    // MARK: - 题库选择卡片（人教版 学科×年级 + 自定义 CSV）
+
+    private var bankCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            sectionTitle("答题题库（人教版）")
+
+            HStack(spacing: 8) {
+                ForEach(0..<3, id: \.self) { si in
+                    Button(QuestionBank.subjectNames[si]) {
+                        currentSubject = si
+                        refreshTick += 1
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8)
+                        .fill(currentSubject == si ? Theme.highlight : Theme.bgSurfaceLight))
+                    .foregroundColor(currentSubject == si ? Theme.bgDark : Theme.textPrimary)
+                }
+            }
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 6), spacing: 8) {
+                ForEach(0..<12, id: \.self) { gi in
+                    let id = QuestionBank.builtinId(currentSubject, gi)
+                    let selected = prefs.bankId == id
+                    Button(QuestionBank.gradeNames[gi]) {
+                        prefs.bankId = id
+                        refreshTick += 1
+                    }
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8)
+                        .fill(selected ? Theme.highlight : Theme.bgSurfaceLight)
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(selected ? Theme.correctGreen : .clear, lineWidth: 2)))
+                    .foregroundColor(selected ? Theme.bgDark : Theme.textPrimary)
+                }
+            }
+
+            if !qb.customIds().isEmpty {
+                Text("我的自定义题库").font(.subheadline).foregroundColor(Theme.textSecondary)
+                ForEach(qb.customIds(), id: \.self) { cid in
+                    let selected = prefs.bankId == cid
+                    Button(qb.customLabel(cid)) {
+                        prefs.bankId = cid
+                        refreshTick += 1
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8)
+                        .fill(Theme.bgSurfaceLight)
+                        .overlay(RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(selected ? Theme.correctGreen : .clear, lineWidth: 2)))
+                    .foregroundColor(selected ? Theme.correctGreen : Theme.textPrimary)
+                }
+            }
+
+            HStack(spacing: 8) {
+                Button("导入 CSV 题库") { showImporter = true }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.primary))
+                    .foregroundColor(Theme.accent)
+                Button("导出当前题库 CSV") { showExporter = true }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Theme.primary))
+                    .foregroundColor(Theme.accent)
+            }
+        }
+        .padding()
+        .background(RoundedRectangle(cornerRadius: 12).fill(Theme.bgSurface))
+        .id(refreshTick)
+        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.commaSeparatedText]) { result in
+            if case .success(let url) = result {
+                let secured = url.startAccessingSecurityScopedResource()
+                defer { if secured { url.stopAccessingSecurityScopedResource() } }
+                do {
+                    let text = try String(contentsOf: url, encoding: .utf8)
+                    var name = url.lastPathComponent
+                    if name.lowercased().hasSuffix(".csv") { name.removeLast(4) }
+                    let count = try qb.importCsv(name: name, csvText: text)
+                    prefs.bankId = QuestionBank.customPrefix + name
+                    refreshTick += 1
+                } catch {
+                    // 导入失败静默（界面已反馈题库列表未变）
+                }
+            }
+        }
+        .fileExporter(isPresented: $showExporter,
+                      document: CsvDocument(text: qb.exportCsv(prefs.bankId)),
+                      contentType: .commaSeparatedText,
+                      defaultFilename: prefs.bankId + ".csv") { result in
+            // 导出完成（成功与否系统已提示）
+        }
     }
 
     // MARK: - 参数配置卡片

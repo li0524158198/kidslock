@@ -28,3 +28,30 @@ extension Color {
         )
     }
 }
+
+
+// MARK: - CSV 导出文档
+
+import UniformTypeIdentifiers
+
+struct CsvDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.commaSeparatedText] }
+    var text: String
+
+    init(text: String) {
+        self.text = text
+    }
+
+    init(configuration: ReadConfiguration) throws {
+        if let data = configuration.file.regularFileContents,
+           let s = String(data: data, encoding: .utf8) {
+            text = s
+        } else {
+            text = ""
+        }
+    }
+
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: text.data(using: .utf8) ?? Data())
+    }
+}
