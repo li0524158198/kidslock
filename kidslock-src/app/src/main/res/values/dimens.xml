@@ -11,11 +11,15 @@
     <dimen name="text_button">16sp</dimen>
     <dimen name="text_pin">22sp</dimen>
 
+    <!-- 锁屏选项自适应字号（2×2 网格，长选项两行内完整显示） -->
+    <dimen name="option_text_min">14sp</dimen>
+    <dimen name="option_text_max">22sp</dimen>
+
     <!-- 锁屏汉字特大 -->
     <dimen name="text_hanzi">96sp</dimen>
 
     <!-- 按钮 -->
-    <dimen name="btn_height">44dp</dimen>
+    <dimen name="btn_height">52dp</dimen>
     <dimen name="btn_min_width">64dp</dimen>
     <dimen name="btn_corner">8dp</dimen>
     <dimen name="btn_margin">6dp</dimen>

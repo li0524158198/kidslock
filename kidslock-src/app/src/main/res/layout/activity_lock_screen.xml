@@ -65,85 +65,120 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="@dimen/spacing_large" />
 
-        <!-- 选项按钮 -->
+        <!-- 选项按钮：2×2 网格（每项半屏宽，长选项不再截断），两行自适应字号 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
+            android:orientation="vertical"
             android:layout_marginHorizontal="@dimen/tv_margin_h">
 
-            <Button
-                android:id="@+id/btnOption1"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/btn_height"
-                android:layout_weight="1"
-                android:layout_margin="@dimen/btn_margin"
-                android:background="@drawable/btn_option_bg"
-                android:textColor="@color/btn_text"
-                android:textSize="@dimen/text_button"
-                android:textAllCaps="false"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
-                app:autoSizeMaxTextSize="24sp"
-                android:focusable="true"
-                android:clickable="true"
-                android:nextFocusLeft="@id/btnOption4"
-                android:nextFocusRight="@id/btnOption2" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnOption2"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/btn_height"
-                android:layout_weight="1"
-                android:layout_margin="@dimen/btn_margin"
-                android:background="@drawable/btn_option_bg"
-                android:textColor="@color/btn_text"
-                android:textSize="@dimen/text_button"
-                android:textAllCaps="false"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
-                app:autoSizeMaxTextSize="24sp"
-                android:focusable="true"
-                android:clickable="true" />
+                <Button
+                    android:id="@+id/btnOption1"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/btn_margin"
+                    android:background="@drawable/btn_option_bg"
+                    android:textColor="@color/btn_text"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:ellipsize="none"
+                    android:paddingHorizontal="@dimen/spacing_medium"
+                    android:paddingVertical="@dimen/spacing_small"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/option_text_min"
+                    app:autoSizeMaxTextSize="@dimen/option_text_max"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:nextFocusRight="@id/btnOption2"
+                    android:nextFocusDown="@id/btnOption3" />
 
-            <Button
-                android:id="@+id/btnOption3"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/btn_height"
-                android:layout_weight="1"
-                android:layout_margin="@dimen/btn_margin"
-                android:background="@drawable/btn_option_bg"
-                android:textColor="@color/btn_text"
-                android:textSize="@dimen/text_button"
-                android:textAllCaps="false"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
-                app:autoSizeMaxTextSize="24sp"
-                android:focusable="true"
-                android:clickable="true" />
+                <Button
+                    android:id="@+id/btnOption2"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/btn_margin"
+                    android:background="@drawable/btn_option_bg"
+                    android:textColor="@color/btn_text"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:ellipsize="none"
+                    android:paddingHorizontal="@dimen/spacing_medium"
+                    android:paddingVertical="@dimen/spacing_small"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/option_text_min"
+                    app:autoSizeMaxTextSize="@dimen/option_text_max"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:nextFocusLeft="@id/btnOption1"
+                    android:nextFocusDown="@id/btnOption4" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnOption4"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/btn_height"
-                android:layout_weight="1"
-                android:layout_margin="@dimen/btn_margin"
-                android:background="@drawable/btn_option_bg"
-                android:textColor="@color/btn_text"
-                android:textSize="@dimen/text_button"
-                android:textAllCaps="false"
-                app:autoSizeTextType="uniform"
-                app:autoSizeMinTextSize="12sp"
-                app:autoSizeMaxTextSize="24sp"
-                android:focusable="true"
-                android:clickable="true"
-                android:nextFocusLeft="@id/btnOption3"
-                android:nextFocusRight="@id/btnOption1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnOption3"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/btn_margin"
+                    android:background="@drawable/btn_option_bg"
+                    android:textColor="@color/btn_text"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:ellipsize="none"
+                    android:paddingHorizontal="@dimen/spacing_medium"
+                    android:paddingVertical="@dimen/spacing_small"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/option_text_min"
+                    app:autoSizeMaxTextSize="@dimen/option_text_max"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:nextFocusUp="@id/btnOption1"
+                    android:nextFocusRight="@id/btnOption4" />
+
+                <Button
+                    android:id="@+id/btnOption4"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/btn_height"
+                    android:layout_weight="1"
+                    android:layout_margin="@dimen/btn_margin"
+                    android:background="@drawable/btn_option_bg"
+                    android:textColor="@color/btn_text"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:ellipsize="none"
+                    android:paddingHorizontal="@dimen/spacing_medium"
+                    android:paddingVertical="@dimen/spacing_small"
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="@dimen/option_text_min"
+                    app:autoSizeMaxTextSize="@dimen/option_text_max"
+                    android:focusable="true"
+                    android:clickable="true"
+                    android:nextFocusUp="@id/btnOption2"
+                    android:nextFocusLeft="@id/btnOption3" />
+            </LinearLayout>
 
         </LinearLayout>
 
