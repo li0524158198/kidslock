@@ -14,6 +14,10 @@
 | 设备冒烟（E2E） | `python qa/e2e_tv.py` 等 | 模拟器/真机 + adb | uiautomator 驱动的全流程实测 |
 | 发布核对 | `python qa/release_check.py` | dist/ 产物齐全 | R1-R7：题库 MD5、APK/HAP 内嵌题库、下载站资产一致性 |
 
+**发布入口（第二轮复测 N-1 建议落地）**：构建走 `python scripts/build_all.py`——
+sync 校验 → Android/Harmony 构建 → 部署 dist+下载站 → 强制跑数据层与发布核对卡点，
+任一步失败即中止发布（防止"产物落后于源码一个版本"复发）。
+
 ## 题库单一源（重要）
 
 所有脚本读 `data/questions.json`（仓库唯一题库源）。改题库的正确流程：

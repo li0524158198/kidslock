@@ -64,12 +64,12 @@ struct SettingsView: View {
                 .keyboardType(.numberPad)
             Button("确定") {
                 if pinInput.count == 4 && pinInput.allSatisfy(\.isNumber) {
-                    prefs.parentPin = pinInput
+                    prefs.setParentPin(pinInput)
                 }
             }
             Button("取消", role: .cancel) {}
         } message: {
-            Text("当前PIN：\(prefs.parentPin)")
+            Text(prefs.isPinDefault ? "当前PIN：默认 1234（建议修改）" : "当前PIN：已设置")
         }
     }
 

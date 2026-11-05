@@ -7,6 +7,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+
 /**
  * SharedPreferences 封装：管理所有持久化设置和状态。
  * 状态在重启后仍然保留，保证锁屏不会被绕过。
@@ -25,9 +29,14 @@ public class PrefManager {
     private static final String KEY_IS_LOCKED = "is_locked";
     private static final String KEY_TIMER_ACTIVE = "timer_active";
     private static final String KEY_TIMER_END_TIME = "timer_end_time";
-    private static final String KEY_PARENT_PIN = "parent_pin";
+    private static final String KEY_PARENT_PIN = "parent_pin"; // 旧版明文，仅用于迁移读取
+    private static final String KEY_PIN_CRED = "pin_cred";     // "saltHex:hashHex"
+    private static final String KEY_PIN_IS_DEFAULT = "pin_is_default";
     private static final String KEY_PIN_FAIL_COUNT = "pin_fail_count";
     private static final String KEY_PIN_LOCK_UNTIL = "pin_lock_until";
+
+    private static final int SALT_HEX_LEN = 32; // 16 字节
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     // Defaults
     private static final boolean DEFAULT_AUTO_START = true;
@@ -115,13 +124,63 @@ public class PrefManager {
         return Math.max(0, end - now);
     }
 
-    // --- Parent PIN ---
-    public String getParentPin() {
-        return prefs.getString(KEY_PARENT_PIN, DEFAULT_PARENT_PIN);
+    // --- Parent PIN（加盐 SHA-256 哈希存储）---
+    // 存储格式 pin_cred = "<saltHex32>:<hashHex64>"，hash = SHA256(saltHex + pin)。
+    // 旧版明文（parent_pin，4 位数字）在首次校验时自动迁移为哈希后删除；默认 PIN 1234。
+
+    /** 设置 PIN（存哈希，明文不落盘）。 */
+    public void setParentPin(String pin) {
+        String salt = randomHex();
+        prefs.edit()
+                .putString(KEY_PIN_CRED, salt + ":" + sha256Hex(salt + pin))
+                .putBoolean(KEY_PIN_IS_DEFAULT, false)
+                .apply();
     }
 
-    public void setParentPin(String pin) {
-        prefs.edit().putString(KEY_PARENT_PIN, pin).apply();
+    /** 校验 PIN（首次调用会把旧明文/默认 1234 迁移为哈希）。 */
+    public boolean checkPin(String pin) {
+        migrateOrInit();
+        String cred = prefs.getString(KEY_PIN_CRED, "");
+        int i = cred.indexOf(':');
+        if (i <= 0) return false;
+        return sha256Hex(cred.substring(0, i) + pin).equals(cred.substring(i + 1));
+    }
+
+    /** 是否仍是默认 PIN（1234，从未被修改过）——供设置页提示。 */
+    public boolean isPinDefault() {
+        migrateOrInit();
+        return prefs.getBoolean(KEY_PIN_IS_DEFAULT, false);
+    }
+
+    /** 生成 pin_cred 哈希凭据：优先迁移旧明文，否则初始化默认 1234。 */
+    private void migrateOrInit() {
+        if (prefs.getString(KEY_PIN_CRED, null) != null) return;
+        String legacy = prefs.getString(KEY_PARENT_PIN, null);
+        boolean legacyValid = legacy != null && legacy.matches("\\d{4}");
+        String base = legacyValid ? legacy : DEFAULT_PARENT_PIN;
+        String salt = randomHex();
+        prefs.edit()
+                .putString(KEY_PIN_CRED, salt + ":" + sha256Hex(salt + base))
+                .putBoolean(KEY_PIN_IS_DEFAULT, !legacyValid)
+                .remove(KEY_PARENT_PIN)
+                .apply();
+    }
+
+    private static String randomHex() {
+        StringBuilder sb = new StringBuilder(SALT_HEX_LEN);
+        for (int i = 0; i < SALT_HEX_LEN; i++) sb.append("0123456789abcdef".charAt(SECURE_RANDOM.nextInt(16)));
+        return sb.toString();
+    }
+
+    private static String sha256Hex(String s) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            StringBuilder sb = new StringBuilder(64);
+            for (byte b : md.digest(s.getBytes(StandardCharsets.UTF_8))) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (Exception e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
     }
 
     // --- PIN 防暴力尝试 ---

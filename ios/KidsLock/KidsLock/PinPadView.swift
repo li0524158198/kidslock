@@ -84,7 +84,7 @@ struct PinPadView: View {
             pinInput = ""
             return
         }
-        if pinInput == prefs.parentPin {
+        if prefs.checkPin(pinInput) {
             prefs.resetPinFailures()
             onUnlocked()
         } else {

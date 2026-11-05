@@ -20,7 +20,6 @@ struct Index {
   @StorageLink('watchLimitSeconds') watchLimitSeconds: number = 1800;
   @StorageLink('bankId') bankId: string = 'chinese_primary';
   @StorageLink('unlockCount') unlockCount: number = 3;
-  @StorageLink('parentPin') parentPin: string = '1234';
 
   @State remainingText: string = '';
   @State statusText: string = '当前状态：未计时';
@@ -513,7 +512,7 @@ struct Index {
           Text('设置家长PIN码（4位数字）')
             .fontSize(17)
             .fontColor($r('app.color.text_primary'))
-          TextInput({ placeholder: `当前PIN：${this.parentPin}`, text: this.pinInput })
+          TextInput({ placeholder: `当前PIN：${AppInit.isPinDefault() ? '默认 1234（建议修改）' : '已设置'}`, text: this.pinInput })
             .type(InputType.Number)
             .maxLength(4)
             .width('100%')
@@ -536,7 +535,7 @@ struct Index {
               .layoutWeight(1)
               .onClick(() => {
                 if (this.pinInput.length === 4) {
-                  this.parentPin = this.pinInput;
+                  AppInit.setParentPin(this.pinInput);
                   this.toast('PIN码已设置');
                 } else {
                   this.toast('PIN码必须是4位数字');

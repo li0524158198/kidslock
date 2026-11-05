@@ -174,7 +174,6 @@ struct Lock {
   }
 
   private checkPin(): void {
-    const pin = AppStorage.get<string>('parentPin') ?? '1234';
     if (AppInit.isPinLocked()) {
       const remainingSec = Math.ceil(AppInit.pinLockRemainingMillis() / 1000);
       this.pinMessage = `尝试次数过多，请 ${remainingSec} 秒后再试`;
@@ -182,7 +181,7 @@ struct Lock {
       this.pinInput = '';
       return;
     }
-    if (this.pinInput === pin) {
+    if (AppInit.checkPin(this.pinInput)) {
       AppInit.resetPinFailures();
       this.unlock();
     } else {

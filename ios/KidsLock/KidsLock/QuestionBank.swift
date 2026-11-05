@@ -8,7 +8,8 @@ struct QuestionItem: Identifiable {
     let options: [String]     // 已打乱
     let answerIndex: Int
 
-    var id: String { text + "|" + options.joined() }
+    // P3-6：实例级稳定 id（选项每次加载都重洗，text+options 作 id 会导致 ForEach 身份抖动）
+    let id = UUID()
 }
 
 struct BankEntry: Identifiable {

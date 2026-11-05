@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CryptoKit
 import UserNotifications
 
 /// UserDefaults 封装：管理所有持久化设置和状态。
@@ -19,7 +20,9 @@ final class Prefs: ObservableObject {
         static let isLocked = "is_locked"
         static let timerActive = "timer_active"
         static let timerEndTime = "timer_end_time"
-        static let parentPin = "parent_pin"
+        static let parentPin = "parent_pin"   // 旧版明文，仅用于迁移读取
+        static let pinCred = "pin_cred"       // "saltHex:hashHex"
+        static let pinIsDefault = "pin_is_default"
         static let pinFailCount = "pin_fail_count"
         static let pinLockUntil = "pin_lock_until"
     }
@@ -85,11 +88,44 @@ final class Prefs: ObservableObject {
         didSet { d.set(bankId, forKey: Key.bankId) }
     }
 
-    // MARK: - Parent PIN
+    // MARK: - Parent PIN（加盐 SHA-256 哈希存储）
+    // pinCred = "<saltHex>:<hashHex>"，hash = SHA256(saltHex + pin)。
+    // 旧版明文（parent_pin，4 位数字）首次校验时自动迁移为哈希后删除；默认 PIN 1234。
 
-    var parentPin: String {
-        get { d.string(forKey: Key.parentPin) ?? defaultParentPin }
-        set { d.set(newValue, forKey: Key.parentPin) }
+    /// 设置 PIN（存哈希，明文不落盘）。
+    func setParentPin(_ pin: String) {
+        var salt = ""
+        for _ in 0..<32 { salt += String(format: "%x", Int.random(in: 0...15)) }
+        d.set(salt + ":" + sha256Hex(salt + pin), forKey: Key.pinCred)
+        d.set(false, forKey: Key.pinIsDefault)
+    }
+
+    /// 校验 PIN（首次调用会把旧明文/默认 1234 迁移为哈希）。
+    func checkPin(_ pin: String) -> Bool {
+        migrateOrInit()
+        guard let cred = d.string(forKey: Key.pinCred),
+              let i = cred.firstIndex(of: ":") else { return false }
+        let salt = String(cred[cred.startIndex..<i])
+        return sha256Hex(salt + pin) == String(cred[cred.index(after: i)...])
+    }
+
+    /// 是否仍是默认 PIN（1234，从未被修改过）——供设置页提示。
+    var isPinDefault: Bool {
+        migrateOrInit()
+        return d.bool(forKey: Key.pinIsDefault)
+    }
+
+    private func migrateOrInit() {
+        guard d.string(forKey: Key.pinCred) == nil else { return }
+        let legacy = d.string(forKey: Key.parentPin)
+        let legacyValid = legacy?.count == 4 && legacy!.allSatisfy(\.isNumber)
+        setParentPin(legacyValid ? legacy! : defaultParentPin)
+        d.set(!legacyValid, forKey: Key.pinIsDefault)
+        d.removeObject(forKey: Key.parentPin)
+    }
+
+    private func sha256Hex(_ s: String) -> String {
+        SHA256.hash(data: Data(s.utf8)).map { String(format: "%02x", $0) }.joined()
     }
 
     // MARK: - PIN 防暴力尝试

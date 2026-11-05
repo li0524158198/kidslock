@@ -223,7 +223,8 @@ public class JvmTests {
         PrefManager pref = new PrefManager(ctx);
 
         // T4.1 默认值
-        check("T4.1a 默认 PIN=1234", pref.getParentPin().equals("1234"));
+        check("T4.1a 默认 PIN 校验（1234 对/9999 错）", pref.checkPin("1234") && !pref.checkPin("9999"));
+        check("T4.1a2 默认态 isPinDefault=true", pref.isPinDefault());
         check("T4.1b 默认解锁题数=3", pref.getUnlockCount() == 3);
         check("T4.1c 默认观看时长=1800 秒", pref.getWatchLimitSeconds() == 1800);
         check("T4.1d 默认自启=开", pref.isAutoStart());
@@ -303,8 +304,25 @@ public class JvmTests {
             TestContext c6 = new TestContext();
             PrefManager p6 = new PrefManager(c6);
             p6.setParentPin("9999"); p6.setUnlockCount(10); p6.setWatchLimitSeconds(30); p6.setAutoStart(false); p6.setBankId("math_g7");
-            check("T4.6 设置写入回读", p6.getParentPin().equals("9999") && p6.getUnlockCount() == 10
+            check("T4.6 设置写入回读（PIN 哈希校验）", p6.checkPin("9999") && !p6.checkPin("1234")
+                    && !p6.isPinDefault() && p6.getUnlockCount() == 10
                     && p6.getWatchLimitSeconds() == 30 && !p6.isAutoStart() && p6.getBankId().equals("math_g7"));
+        }
+
+        // T4.7 PIN 哈希存储（P2-3）：迁移/格式/盐唯一性
+        {
+            TestContext c7 = new TestContext();
+            SharedPreferences.MemPrefs st = (SharedPreferences.MemPrefs) c7.getSharedPreferences("x", 0);
+            st.edit().putString("parent_pin", "9999").apply(); // 模拟旧版明文
+            PrefManager p7 = new PrefManager(c7);
+            check("T4.7a 旧明文 PIN 迁移校验", p7.checkPin("9999") && !p7.checkPin("1234"));
+            String cred = st.getString("pin_cred", "");
+            check("T4.7b 迁移后 pin_cred=salt:hash 且明文已删除",
+                    cred.matches("[0-9a-f]{32}:[0-9a-f]{64}") && "x".equals(st.getString("parent_pin", "x")),
+                    cred.substring(0, 8) + "…");
+            check("T4.7c 迁移自定义 PIN 后 isPinDefault=false", !p7.isPinDefault());
+            p7.setParentPin("9999"); // 同 PIN 重设
+            check("T4.7d 同 PIN 重设盐不同（哈希变化）", !st.getString("pin_cred", "").equals(cred));
         }
     }
 

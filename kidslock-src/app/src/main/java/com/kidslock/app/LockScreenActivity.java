@@ -280,7 +280,7 @@ public class LockScreenActivity extends AppCompatActivity {
             updatePinDisplay();
             return;
         }
-        if (pinInput.toString().equals(pref.getParentPin())) {
+        if (pref.checkPin(pinInput.toString())) {
             pref.resetPinFailures();
             unlock();
         } else {
