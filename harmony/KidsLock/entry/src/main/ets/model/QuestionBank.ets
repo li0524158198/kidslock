@@ -224,13 +224,14 @@ export class QuestionBank {
       const r = QuestionBank.ri(3, grade <= 3 ? 9 : 40);
       const a = b * r;
       return Math.random() < 0.5
-        ? QuestionBank.buildNumeric(`${a} × ${b} = ?`, r)
+        ? QuestionBank.buildNumeric(`${a} × ${b} = ?`, a * b)
         : QuestionBank.buildNumeric(`${a} ÷ ${b} = ?`, r);
     }
     if (grade <= 6) {
       const a = QuestionBank.ri(11, 60);
       const b = QuestionBank.ri(2, 20);
-      const c = QuestionBank.ri(5, 40);
+      // 五六年级未学负数：c 不超过 a+b-1，保证结果 ≥ 1
+      const c = QuestionBank.ri(5, Math.min(40, a + b - 1));
       return QuestionBank.buildNumeric(`${a} + ${b} - ${c} = ?`, a + b - c);
     }
     const a = QuestionBank.ri(2, 9);
@@ -243,7 +244,7 @@ export class QuestionBank {
     const set: Set<number> = new Set<number>();
     set.add(r);
     while (set.size < 4) {
-      const d = QuestionBank.ri(1, 9) * (Math.random() < 0.1 ? 10 : 1);
+      const d = QuestionBank.ri(1, 9) * (Math.random() < 0.125 ? 10 : 1);
       const v = r + (Math.random() < 0.5 ? d : -d);
       if (v >= 0) {
         set.add(v);
@@ -266,7 +267,7 @@ export class QuestionBank {
 
   // ==================== CSV 导入导出 ====================
 
-  /** 导出某库为 CSV 文本 */
+  /** 导出某库为 CSV 文本（字段含逗号/引号/换行时按 RFC 4180 加双引号包裹） */
   exportCsv(bankId: string): string {
     const id = this.resolveBankId(bankId);
     let items: QuestionRaw[] = [];
@@ -284,25 +285,32 @@ export class QuestionBank {
       }
       const ans = letters[it.ans] ?? 'A';
       const big = it.char ?? '';
-      sb += `${it.q},${opts[0]},${opts[1]},${opts[2]},${opts[3]},${ans},${big}\r\n`;
+      sb += `${QuestionBank.csvCell(it.q)},${QuestionBank.csvCell(opts[0])},${QuestionBank.csvCell(opts[1])},` +
+        `${QuestionBank.csvCell(opts[2])},${QuestionBank.csvCell(opts[3])},${ans},${big}\r\n`;
     }
     return sb;
   }
 
-  /** 从 CSV 文本导入为自定义库（覆盖同名），返回题数 */
-  importCsv(name: string, csvText: string): number {
+  private static csvCell(s: string): string {
+    if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+
+  /**
+   * 从 CSV 文本导入为自定义库（覆盖同名）。
+   * @return 实际保存的自定义库 id（文件名已净化，调用方必须用该 id 选中题库）
+   */
+  importCsv(name: string, csvText: string): string {
     const items: QuestionRaw[] = [];
-    const lines = csvText.replace(/\uFEFF/g, '').replace(/\r\n/g, '\n').split('\n');
+    const rows: string[][] = QuestionBank.parseCsv(csvText);
     let start = 0;
-    if (lines.length > 0 && lines[0].indexOf('题干') >= 0) {
+    if (rows.length > 0 && rows[0].length > 0 && rows[0][0].indexOf('题干') >= 0) {
       start = 1;
     }
-    for (let i = start; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (line.length === 0) {
-        continue;
-      }
-      const c = line.split(',');
+    for (let i = start; i < rows.length; i++) {
+      const c = rows[i];
       if (c.length < 6) {
         continue;
       }
@@ -329,7 +337,59 @@ export class QuestionBank {
     const id = QuestionBank.CUSTOM_PREFIX + safe;
     this.customBanks[id] = { label: `自定义·${safe}`, items: items };
     this.saveCustom();
-    return items.length;
+    return id;
+  }
+
+  /** 某题库的题目数（内置库或自定义库；导入成功的题数用它取） */
+  bankSize(bankId: string): number {
+    const id = this.resolveBankId(bankId);
+    if (id.startsWith(QuestionBank.CUSTOM_PREFIX)) {
+      const e = this.customBanks[id];
+      return e !== undefined ? e.items.length : 0;
+    }
+    const arr = this.banks[id];
+    return arr !== undefined ? arr.length : 0;
+  }
+
+  /** 极简 CSV 解析：支持双引号包裹与转义、引号内逗号/换行、\r\n 换行、BOM */
+  private static parseCsv(text: string): string[][] {
+    const rows: string[][] = [];
+    let cur: string[] = [];
+    let cell = '';
+    let inQuote = false;
+    const s = text.replace(/\uFEFF/g, '');
+    for (let i = 0; i < s.length; i++) {
+      const ch = s[i];
+      if (inQuote) {
+        if (ch === '"') {
+          if (i + 1 < s.length && s[i + 1] === '"') {
+            cell += '"';
+            i++;
+          } else {
+            inQuote = false;
+          }
+        } else {
+          cell += ch;
+        }
+      } else if (ch === '"') {
+        inQuote = true;
+      } else if (ch === ',') {
+        cur.push(cell);
+        cell = '';
+      } else if (ch === '\n') {
+        cur.push(cell);
+        rows.push(cur);
+        cur = [];
+        cell = '';
+      } else if (ch !== '\r') {
+        cell += ch;
+      }
+    }
+    if (cell.length > 0 || cur.length > 0) {
+      cur.push(cell);
+      rows.push(cur);
+    }
+    return rows;
   }
 
   private customFile(): string {

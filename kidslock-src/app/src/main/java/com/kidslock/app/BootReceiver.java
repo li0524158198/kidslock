@@ -10,7 +10,8 @@ import android.util.Log;
  * 开机自启动接收器。
  * - 如果当前处于锁屏状态 → 直接弹锁屏界面
  * - 如果计时器正在运行 → 恢复计时（检查是否已超时）
- * - 如果启用了开机自启 → 启动计时服务
+ * - 如果启用了自动继续 → 自动开始一轮计时
+ * （答题解锁后的"下一轮计时"由 LockScreenActivity.unlockByQuiz 负责）
  */
 public class BootReceiver extends BroadcastReceiver {
 

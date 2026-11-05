@@ -90,7 +90,8 @@ public class LockService extends Service {
             return START_STICKY;
         }
 
-        // 开始计时循环
+        // 开始计时循环（若此前处于锁屏守护模式，先移除悬浮窗）
+        hideOverlay();
         startTicking();
         return START_STICKY;
     }
@@ -98,6 +99,13 @@ public class LockService extends Service {
     // ==================== 计时模式 ====================
 
     private void startTicking() {
+        // 幂等：从其他模式切换过来时先停掉旧循环，防止重复 tick
+        if (tickRunnable != null) {
+            handler.removeCallbacks(tickRunnable);
+        }
+        if (watchdogRunnable != null) {
+            handler.removeCallbacks(watchdogRunnable);
+        }
         tickRunnable = new Runnable() {
             @Override
             public void run() {
@@ -149,7 +157,14 @@ public class LockService extends Service {
             @Override
             public void run() {
                 if (!pref.isLocked()) {
-                    // 已解锁，守护任务结束
+                    if (pref.isTimerActive()) {
+                        // 答题解锁且"自动继续"已开启新一轮计时 → 切回计时模式（而不是停止服务）
+                        Log.i(TAG, "Unlocked with new timer, switching to tick mode");
+                        hideOverlay();
+                        startTicking();
+                        return;
+                    }
+                    // 已解锁（家长 PIN 解锁等），守护任务结束
                     Log.i(TAG, "Unlocked, watchdog stopping");
                     hideOverlay();
                     stopForeground(true);

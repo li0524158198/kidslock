@@ -75,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // 计时自愈：服务曾被系统/强杀停止时，重新拉起 LockService 继续倒计时（已到期则直接锁屏）
+        if (pref.isTimerActive()) {
+            startLockService();
+        }
+
         setContentView(R.layout.activity_main);
 
         initViews();
@@ -100,10 +105,15 @@ public class MainActivity extends AppCompatActivity {
         btnAutoStart = findViewById(R.id.btnAutoStart);
         tvWatchTime = findViewById(R.id.tvWatchTime);
         tvUnlockCount = findViewById(R.id.tvUnlockCount);
+        try {
+            String vn = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            ((TextView) findViewById(R.id.tvVersion)).setText("v" + vn);
+        } catch (Exception ignore) {
+        }
 
         questionBank = new QuestionBank(this);
 
-        // 学科按钮（语文/数学/英语）
+        // 学科按钮（语文/数学/英语）：点击立即切换到该学科（保留当前年级）
         int[] subjectIds = {R.id.subject0, R.id.subject1, R.id.subject2};
         String[] subjects = {"chinese", "math", "english"};
         subjectButtons = new Button[3];
@@ -112,7 +122,11 @@ public class MainActivity extends AppCompatActivity {
             final String s = subjects[i];
             b.setOnClickListener(v -> {
                 currentSubject = s;
+                int grade = savedGrade();
+                pref.setBankId(s + "_g" + grade);
+                updateStatus();
                 refreshBankSelection();
+                toast("题库：" + questionBank.getLabel(s + "_g" + grade));
             });
             subjectButtons[i] = b;
         }
@@ -127,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
             b.setOnClickListener(v -> {
                 pref.setBankId(currentSubject + "_g" + grade);
                 updateStatus();
-                toast("题库：语文/数学/英语 · " + grade + " 年级");
+                refreshBankSelection();
+                toast("题库：" + questionBank.getLabel(currentSubject + "_g" + grade));
             });
             gradeButtons[g] = b;
         }
@@ -152,6 +167,17 @@ public class MainActivity extends AppCompatActivity {
         if (id.startsWith("math")) currentSubject = "math";
         else if (id.startsWith("english")) currentSubject = "english";
         else if (id.startsWith("chinese")) currentSubject = "chinese";
+    }
+
+    /** 从已保存 bankId 解析年级（1..12），自定义库或解析失败回退 1 */
+    private int savedGrade() {
+        String id = questionBank.resolveBankId(pref.getBankId());
+        try {
+            int g = Integer.parseInt(id.substring(id.indexOf("_g") + 2));
+            if (g >= 1 && g <= 12) return g;
+        } catch (Exception ignore) {
+        }
+        return 1;
     }
 
     private void refreshBankSelection() {
@@ -253,11 +279,11 @@ public class MainActivity extends AppCompatActivity {
                 String line;
                 while ((line = br.readLine()) != null) sb.append(line).append("\n");
                 String name = queryDisplayName(uri);
-                int count = questionBank.importCsv(name, sb.toString());
-                pref.setBankId(QuestionBank.CUSTOM_PREFIX + name);
+                String bankId = questionBank.importCsv(name, sb.toString());
+                pref.setBankId(bankId);
                 refreshBankSelection();
                 refreshCustomBankList();
-                toast("导入成功：" + count + " 题");
+                toast("导入成功：" + questionBank.bankSize(bankId) + " 题");
             } catch (Exception e) {
                 toast("导入失败：" + e.getMessage());
             }
@@ -288,12 +314,12 @@ public class MainActivity extends AppCompatActivity {
     // ==================== 原有设置逻辑 ====================
 
     private void setupListeners() {
-        // 开机自启
+        // 自动继续（开机自动开始计时 + 答题解锁后自动开始下一轮）
         btnAutoStart.setOnClickListener(v -> {
             boolean newVal = !pref.isAutoStart();
             pref.setAutoStart(newVal);
             updateStatus();
-            toast(newVal ? "已开启开机自启" : "已关闭开机自启");
+            toast(newVal ? "已开启自动继续" : "已关闭自动继续");
         });
 
         // 观看时长预设（单位：秒，含 30 秒测试档）
@@ -403,8 +429,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStatus() {
-        // 开机自启
-        btnAutoStart.setText(pref.isAutoStart() ? "开机自启：已开启" : "开机自启：已关闭");
+        // 自动继续
+        btnAutoStart.setText(pref.isAutoStart() ? "自动继续：已开启" : "自动继续：已关闭");
 
         // 当前题库
         if (tvWatchTime != null) {

@@ -170,7 +170,7 @@ struct LockScreenView: View {
             feedbackShown = true
             correctCount += 1
             if correctCount >= requiredCount {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { unlock() }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { unlockByQuiz() }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { loadNextQuestion() }
             }
@@ -184,6 +184,19 @@ struct LockScreenView: View {
 
     // MARK: - 解锁
 
+    /// 孩子答题达标解锁。与家长 PIN 解锁不同：
+    /// 若"自动继续"开启，解锁后立即开始下一轮观看计时（看 N 分钟 → 答题 → 再看 N 分钟循环），
+    /// 否则计时彻底停止，等家长手动开始。
+    private func unlockByQuiz() {
+        if prefs.autoStart {
+            prefs.startTimer(seconds: prefs.watchLimitSeconds) // 自带 isLocked=false + 到点本地通知
+            prefs.resetPinFailures()
+        } else {
+            prefs.unlockAll()
+        }
+    }
+
+    /// 家长 PIN 解锁：完全停止计时（家长接管）
     private func unlock() {
         prefs.unlockAll()
     }

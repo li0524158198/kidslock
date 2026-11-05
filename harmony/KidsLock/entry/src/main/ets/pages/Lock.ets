@@ -87,7 +87,7 @@ struct Lock {
       if (this.correctCount >= this.unlockCount) {
         // 全部答对，解锁
         setTimeout(() => {
-          this.unlock();
+          this.unlockByQuiz();
         }, 600);
       } else {
         setTimeout(() => {
@@ -130,6 +130,26 @@ struct Lock {
 
   // ==================== 解锁 ====================
 
+  /**
+   * 孩子答题达标解锁。与家长 PIN 解锁不同：
+   * 若"自动继续"开启，解锁后立即开始下一轮观看计时（看 N 分钟 → 答题 → 再看 N 分钟循环），
+   * 否则计时彻底停止，等家长手动开始。
+   */
+  private unlockByQuiz(): void {
+    const auto = AppStorage.get<boolean>('autoStart') ?? true;
+    if (auto) {
+      AppStorage.setOrCreate('isLocked', false);
+      AppInit.resetPinFailures();
+      const limit = AppStorage.get<number>('watchLimitSeconds') ?? 1800;
+      AppInit.startTimer(limit); // 自带 isLocked=false；回到 Index 后 tick 继续倒计时
+    } else {
+      AppInit.unlockAll();
+    }
+    this.isLocked = false;
+    router.replaceUrl({ url: 'pages/Index' });
+  }
+
+  /** 家长 PIN 解锁：完全停止计时（家长接管） */
   private unlock(): void {
     AppInit.unlockAll();
     this.isLocked = false;

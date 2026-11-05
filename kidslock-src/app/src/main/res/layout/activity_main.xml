@@ -19,7 +19,15 @@
             android:text="@string/settings_title"
             android:textColor="@color/accent"
             android:textSize="@dimen/text_title"
-            android:textStyle="bold"
+            android:textStyle="bold" />
+
+        <!-- 版本号 -->
+        <TextView
+            android:id="@+id/tvVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_body"
             android:layout_marginBottom="@dimen/spacing_medium" />
 
         <!-- 状态 -->
@@ -444,7 +452,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="计时开始后，到时自动锁屏\n重启电视后仍保持锁屏\n解锁需连续答对五年级水平汉字"
+            android:text="计时开始后，到时自动锁屏\n重启电视后仍保持锁屏\n解锁需连续答对所选题库的题目"
             android:textColor="@color/text_secondary"
             android:textSize="@dimen/text_body"
             android:gravity="center"

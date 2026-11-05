@@ -218,11 +218,14 @@ public class QuestionBank {
             } else if (grade <= 4) {
                 int b = ri(3, 9), r = ri(3, grade <= 3 ? 9 : 40), a = b * r;
                 if (random.nextBoolean()) {
-                    return buildNumeric(String.format("%d × %d = ?", a, b), r);
+                    // 乘法标答是 a×b 本身；除法分支 a÷b = r
+                    return buildNumeric(String.format("%d × %d = ?", a, b), a * b);
                 }
                 return buildNumeric(String.format("%d ÷ %d = ?", a, b), r);
             } else if (grade <= 6) {
-                int a = ri(11, 60), b = ri(2, 20), c = ri(5, 40);
+                int a = ri(11, 60), b = ri(2, 20);
+                // 五六年级未学负数：c 不超过 a+b-1，保证结果 ≥ 1
+                int c = ri(5, Math.min(40, a + b - 1));
                 int r = a + b - c;
                 return buildNumeric(String.format("%d + %d - %d = ?", a, b, c), r);
             } else {
@@ -307,10 +310,10 @@ public class QuestionBank {
      *
      * @param name     显示名（通常取文件名去扩展名）
      * @param csvText  CSV 内容（UTF-8）
-     * @return 导入题数
+     * @return 实际保存的自定义库 id（文件名已净化，调用方必须用该 id 选中题库）
      * @throws Exception 格式错误
      */
-    public int importCsv(String name, String csvText) throws Exception {
+    public String importCsv(String name, String csvText) throws Exception {
         List<JSONObject> items = new ArrayList<>();
         List<String[]> rows = parseCsv(csvText);
         int start = 0;
@@ -342,7 +345,21 @@ public class QuestionBank {
         customBanks.put(id, items);
         customLabels.put(id, "自定义·" + safeName);
         saveCustomBanks();
-        return items.size();
+        return id;
+    }
+
+    /** 某题库的题目数（内置库或自定义库；导入成功的题数用它取） */
+    public int bankSize(String bankId) {
+        try {
+            String id = resolveBankId(bankId);
+            if (id.startsWith(CUSTOM_PREFIX)) {
+                List<JSONObject> arr = customBanks.get(id);
+                return arr == null ? 0 : arr.size();
+            }
+            return banks.getJSONArray(id).length();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     /** 极简 CSV 解析：支持双引号包裹与转义、\r\n 换行 */

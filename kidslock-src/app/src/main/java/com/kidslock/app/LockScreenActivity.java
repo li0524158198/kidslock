@@ -174,7 +174,7 @@ public class LockScreenActivity extends AppCompatActivity {
 
             if (correctCount >= requiredCount) {
                 // 全部答对，解锁
-                handler.postDelayed(this::unlock, 600);
+                handler.postDelayed(this::unlockByQuiz, 600);
             } else {
                 handler.postDelayed(this::loadNextQuestion, 1000);
             }
@@ -203,6 +203,33 @@ public class LockScreenActivity extends AppCompatActivity {
 
     // ==================== 解锁 ====================
 
+    /**
+     * 孩子答题达标解锁。与家长 PIN 解锁不同：
+     * 若"自动继续"开启，解锁后立即开始下一轮观看计时（看 N 分钟 → 答题 → 再看 N 分钟循环），
+     * 否则计时彻底停止，等家长手动开始。
+     */
+    private void unlockByQuiz() {
+        pref.setLocked(false);
+        pref.setHomeAliasEnabled(this, false);
+        pref.resetPinFailures();
+        if (pref.isAutoStart()) {
+            // 自动继续：新一轮计时，并让服务从锁屏守护切回计时模式
+            pref.startTimer(pref.getWatchLimitSeconds());
+            Intent svc = new Intent(this, LockService.class);
+            svc.putExtra("action", "start_timer");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(svc);
+            } else {
+                startService(svc);
+            }
+        } else {
+            pref.stopTimer();
+            LockService.requestUnlock(this);
+        }
+        finishAffinity();
+    }
+
+    /** 家长 PIN 解锁：完全停止计时（家长接管） */
     private void unlock() {
         pref.setLocked(false);
         pref.setHomeAliasEnabled(this, false);

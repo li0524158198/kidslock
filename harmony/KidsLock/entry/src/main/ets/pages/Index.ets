@@ -1,7 +1,7 @@
 import { router, promptAction } from '@kit.ArkUI';
 import { AppInit } from '../model/AppInit';
 import { QuestionBank } from '../model/QuestionBank';
-import { common } from '@kit.AbilityKit';
+import { bundleManager, common } from '@kit.AbilityKit';
 import { util } from '@kit.ArkTS';
 import { fileIo as fs } from '@kit.CoreFileKit';
 import { picker } from '@kit.CoreFileKit';
@@ -25,6 +25,7 @@ struct Index {
   @State remainingText: string = '';
   @State statusText: string = '当前状态：未计时';
   @State statusColor: ResourceColor = $r('app.color.text_secondary');
+  @State versionName: string = '';
   private tickId: number = -1;
 
   private readonly timeOptions: number[] = [30, 900, 1800, 2700, 3600, 5400, 7200];
@@ -74,10 +75,10 @@ struct Index {
         name = seg.endsWith('.csv') ? seg.substring(0, seg.length - 4) : seg;
       }
       try {
-        const count = qb.importCsv(name, text);
-        this.bankId = QuestionBank.CUSTOM_PREFIX + name;
+        const id = qb.importCsv(name, text);
+        this.bankId = id;
         this.refreshCustomIds();
-        this.toast(`导入成功：${count} 题`);
+        this.toast(`导入成功：${qb.bankSize(id)} 题`);
       } catch (err) {
         this.toast('导入失败：' + JSON.stringify(err));
       }
@@ -115,11 +116,43 @@ struct Index {
 
   aboutToAppear(): void {
     this.qb = new QuestionBank(getContext(this) as common.UIAbilityContext);
+    this.syncSubjectFromBank();
     this.refreshCustomIds();
     this.tick();
     this.tickId = setInterval(() => {
       this.tick();
     }, 1000);
+    try {
+      const info = bundleManager.getBundleInfoForSelfSync(bundleManager.BundleFlag.GET_BUNDLE_INFO_DEFAULT);
+      this.versionName = `v${info.versionName}`;
+    } catch (e) {
+      this.versionName = '';
+    }
+  }
+
+  /** 从已保存 bankId 反推当前学科（内置库），用于学科按钮高亮同步 */
+  private syncSubjectFromBank(): void {
+    const qb = this.qb;
+    if (qb === null) {
+      return;
+    }
+    const id = qb.resolveBankId(this.bankId);
+    const si = QuestionBank.SUBJECTS.indexOf(id.split('_')[0]);
+    this.currentSubject = si >= 0 ? si : 0;
+  }
+
+  /** 从已保存 bankId 解析年级索引（0..11），自定义库或解析失败回退 0（一年级） */
+  private savedGrade(): number {
+    const qb = this.qb;
+    const id = qb !== null ? qb.resolveBankId(this.bankId) : this.bankId;
+    const i = id.indexOf('_g');
+    if (i >= 0) {
+      const n = parseInt(id.substring(i + 2));
+      if (!Number.isNaN(n) && n >= 1 && n <= 12) {
+        return n - 1;
+      }
+    }
+    return 0;
   }
 
   aboutToDisappear(): void {
@@ -185,7 +218,15 @@ struct Index {
         .fontColor($r('app.color.accent'))
         .width('100%')
         .textAlign(TextAlign.Center)
-        .padding(16)
+        .padding({ top: 16, left: 16, right: 16 })
+      if (this.versionName.length > 0) {
+        Text(this.versionName)
+          .fontSize(12)
+          .fontColor($r('app.color.text_secondary'))
+          .width('100%')
+          .textAlign(TextAlign.Center)
+          .padding({ bottom: 8 })
+      }
 
       Scroll() {
         Column({ space: 12 }) {
@@ -231,7 +272,11 @@ struct Index {
                     .layoutWeight(1)
                     .height(38)
                     .onClick(() => {
+                      // 切学科 = 保留当前年级、立即切换题库
                       this.currentSubject = si ?? 0;
+                      const gi = this.savedGrade();
+                      this.bankId = QuestionBank.builtinId(this.currentSubject, gi);
+                      this.toast('题库：' + QuestionBank.builtinLabel(this.currentSubject, gi));
                     })
                 }, (sub: string) => sub)
               }
@@ -250,7 +295,7 @@ struct Index {
                       .height(38)
                       .onClick(() => {
                         this.bankId = QuestionBank.builtinId(this.currentSubject, gi ?? 0);
-                        this.toast('题库已切换');
+                        this.toast('题库：' + QuestionBank.builtinLabel(this.currentSubject, gi ?? 0));
                       })
                   }
                 }, (gname: string) => gname)

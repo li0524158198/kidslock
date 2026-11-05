@@ -8,7 +8,7 @@ struct QuestionItem: Identifiable {
     let options: [String]     // 已打乱
     let answerIndex: Int
 
-    var id: String { text + String(answerIndex) }
+    var id: String { text + "|" + options.joined() }
 }
 
 struct BankEntry: Identifiable {
@@ -48,6 +48,16 @@ final class QuestionBank {
     static let gradeNames = ["一年级", "二年级", "三年级", "四年级", "五年级", "六年级",
                              "初一", "初二", "初三", "高一", "高二", "高三"]
     static let customPrefix = "custom_"
+
+    /** 内置库显示名（subject: 0..2 学科索引，grade: 0..11 年级索引） */
+    static func builtinLabel(_ subject: Int, _ grade: Int) -> String {
+        return "\(subjectNames[subject])·\(gradeNames[grade])"
+    }
+
+    /** 内置库 id（subject: 0..2 学科索引，grade: 0..11 年级索引） */
+    static func builtinId(_ subject: Int, _ grade: Int) -> String {
+        return "\(subjects[subject])_g\(grade + 1)"
+    }
 
     static let shared = QuestionBank()
 
@@ -103,13 +113,11 @@ final class QuestionBank {
 
     /// 兼容旧版三级库 id：primary→g5、junior→g7、senior→g10
     func resolveBankId(_ bankId: String) -> String {
-        if let id = bankId {
-            if id.hasPrefix(QuestionBank.customPrefix) && customBanks[id] != nil { return id }
-            if banks[id] != nil { return id }
-            if id.hasSuffix("_primary") { return id.replacingOccurrences(of: "_primary", with: "_g5") }
-            if id.hasSuffix("_junior") { return id.replacingOccurrences(of: "_junior", with: "_g7") }
-            if id.hasSuffix("_senior") { return id.replacingOccurrences(of: "_senior", with: "_g10") }
-        }
+        if bankId.hasPrefix(QuestionBank.customPrefix) && customBanks[bankId] != nil { return bankId }
+        if banks[bankId] != nil { return bankId }
+        if bankId.hasSuffix("_primary") { return bankId.replacingOccurrences(of: "_primary", with: "_g5") }
+        if bankId.hasSuffix("_junior") { return bankId.replacingOccurrences(of: "_junior", with: "_g7") }
+        if bankId.hasSuffix("_senior") { return bankId.replacingOccurrences(of: "_senior", with: "_g10") }
         return "chinese_g1"
     }
 
@@ -123,7 +131,7 @@ final class QuestionBank {
                 return Self.shuffle(raw.q, raw.char, raw.opts, raw.ans)
             }
             let grade = parseGrade(id)
-            if id.hasPrefix("math"), grade >= 1, grade <= 9, Bool.random() {
+            if id.hasPrefix("math"), grade >= 1, grade <= 9, Int.random(in: 0..<100) < 30 {
                 if let gq = genMath(grade) { return gq }
             }
             guard let arr = banks[id], !arr.isEmpty else {
@@ -165,7 +173,7 @@ final class QuestionBank {
         func numeric(_ text: String, _ r: Int) -> QuestionItem {
             var set = Set<Int>([r])
             while set.count < 4 {
-                let d = ri(1, 9) * (Bool.random() && Int.random(in: 0..<8) == 0 ? 10 : 1)
+                let d = ri(1, 9) * (Int.random(in: 0..<8) == 0 ? 10 : 1)
                 let v = r + (Bool.random() ? d : -d)
                 if v >= 0 { set.insert(v) }
             }
@@ -187,9 +195,12 @@ final class QuestionBank {
             let b = ri(3, 9)
             let r = ri(3, grade <= 3 ? 9 : 40)
             let a = b * r
-            return Bool.random() ? numeric("\(a) × \(b) = ?", r) : numeric("\(a) ÷ \(b) = ?", r)
+            // 乘法标答是 a×b 本身；除法分支 a÷b = r
+            return Bool.random() ? numeric("\(a) × \(b) = ?", a * b) : numeric("\(a) ÷ \(b) = ?", r)
         case 5...6:
-            let a = ri(11, 60), b = ri(2, 20), c = ri(5, 40)
+            let a = ri(11, 60), b = ri(2, 20)
+            // 五六年级未学负数：c 不超过 a+b-1，保证结果 ≥ 1
+            let c = ri(5, min(40, a + b - 1))
             return numeric("\(a) + \(b) - \(c) = ?", a + b - c)
         default:
             let a = ri(2, 9), x = ri(1, 15), b = ri(1, 40)
@@ -228,8 +239,9 @@ final class QuestionBank {
         return s
     }
 
-    /// 从 CSV 文本导入为自定义库（覆盖同名），返回题数。格式错误抛异常。
-    func importCsv(name: String, csvText: String) throws -> Int {
+    /// 从 CSV 文本导入为自定义库（覆盖同名）。
+    /// 返回实际保存的自定义库 id（文件名已净化，调用方必须用该 id 选中题库）。格式错误抛异常。
+    func importCsv(name: String, csvText: String) throws -> String {
         var items: [QuestionRaw] = []
         let clean = csvText.replacingOccurrences(of: "\u{FEFF}", with: "").replacingOccurrences(of: "\r\n", with: "\n")
         var lines = clean.components(separatedBy: "\n")
@@ -256,7 +268,16 @@ final class QuestionBank {
         let id = QuestionBank.customPrefix + safe
         customBanks[id] = CustomBankEntry(label: "自定义·\(safe)", items: items)
         saveCustom()
-        return items.count
+        return id
+    }
+
+    /// 某题库的题目数（内置库或自定义库）
+    func bankSize(_ bankId: String) -> Int {
+        let id = resolveBankId(bankId)
+        if id.hasPrefix(QuestionBank.customPrefix) {
+            return customBanks[id]?.items.count ?? 0
+        }
+        return banks[id]?.count ?? 0
     }
 
     /// 极简 CSV 行解析（支持双引号）

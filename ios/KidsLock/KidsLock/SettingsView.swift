@@ -10,14 +10,32 @@ struct SettingsView: View {
     @State private var refreshTick = 0
     @State private var showImporter = false
     @State private var showExporter = false
+    @State private var showImportError = false
+    @State private var importErrorText = ""
     private var qb: QuestionBank { QuestionBank.shared }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private var appVersion: String {
+        "v" + (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")
+    }
+
+    /// 从已保存题库解析年级索引（0..11），自定义库或解析失败回退 0（一年级）
+    private func savedGrade() -> Int {
+        let id = qb.resolveBankId(prefs.bankId)
+        guard let range = id.range(of: "_g"), let g = Int(id[range.upperBound...]), (1...12).contains(g) else {
+            return 0
+        }
+        return g - 1
+    }
 
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
+                    Text(appVersion)
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
                     statusCard
                     bankCard
                     configCard
@@ -30,6 +48,13 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            // 从已保存题库反推学科，保持按钮高亮与实际一致
+            let id = qb.resolveBankId(prefs.bankId)
+            if let idx = QuestionBank.subjects.firstIndex(where: { id.hasPrefix($0) }) {
+                currentSubject = idx
+            }
+        }
         .onReceive(timer) { _ in
             now = Date()
             checkExpiry()
@@ -89,7 +114,9 @@ struct SettingsView: View {
             HStack(spacing: 8) {
                 ForEach(0..<3, id: \.self) { si in
                     Button(QuestionBank.subjectNames[si]) {
+                        // 切学科 = 保留当前年级、立即切换题库
                         currentSubject = si
+                        prefs.bankId = QuestionBank.builtinId(si, savedGrade())
                         refreshTick += 1
                     }
                     .frame(maxWidth: .infinity)
@@ -161,13 +188,18 @@ struct SettingsView: View {
                     let text = try String(contentsOf: url, encoding: .utf8)
                     var name = url.lastPathComponent
                     if name.lowercased().hasSuffix(".csv") { name.removeLast(4) }
-                    let count = try qb.importCsv(name: name, csvText: text)
-                    prefs.bankId = QuestionBank.customPrefix + name
+                    prefs.bankId = try qb.importCsv(name: name, csvText: text)
                     refreshTick += 1
                 } catch {
-                    // 导入失败静默（界面已反馈题库列表未变）
+                    importErrorText = error.localizedDescription.isEmpty ? "文件格式无法识别" : error.localizedDescription
+                    showImportError = true
                 }
             }
+        }
+        .alert("导入失败", isPresented: $showImportError) {
+            Button("好", role: .cancel) {}
+        } message: {
+            Text(importErrorText)
         }
         .fileExporter(isPresented: $showExporter,
                       document: CsvDocument(text: qb.exportCsv(prefs.bankId)),
