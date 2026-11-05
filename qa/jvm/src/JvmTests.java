@@ -226,7 +226,7 @@ public class JvmTests {
         check("T4.1a 默认 PIN 校验（1234 对/9999 错）", pref.checkPin("1234") && !pref.checkPin("9999"));
         check("T4.1a2 默认态 isPinDefault=true", pref.isPinDefault());
         check("T4.1b 默认解锁题数=3", pref.getUnlockCount() == 3);
-        check("T4.1c 默认观看时长=1800 秒", pref.getWatchLimitSeconds() == 1800);
+        check("T4.1c 默认观看时长=900 秒（15 分钟）", pref.getWatchLimitSeconds() == 900);
         check("T4.1d 默认自启=开", pref.isAutoStart());
         check("T4.1e 默认未锁屏/未计时", !pref.isLocked() && !pref.isTimerActive());
 

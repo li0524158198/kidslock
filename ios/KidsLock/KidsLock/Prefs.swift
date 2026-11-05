@@ -28,7 +28,7 @@ final class Prefs: ObservableObject {
     }
 
     // Defaults
-    private let defaultWatchLimitSec = 1800
+    private let defaultWatchLimitSec = 900
     private let defaultUnlockCount = 3
     private let defaultParentPin = "1234"
     private let maxPinFails = 5

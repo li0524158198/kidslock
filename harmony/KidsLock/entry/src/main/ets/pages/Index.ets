@@ -17,7 +17,7 @@ struct Index {
   @StorageLink('isLocked') isLocked: boolean = false;
   @StorageLink('timerActive') timerActive: boolean = false;
   @StorageLink('autoStart') autoStart: boolean = true;
-  @StorageLink('watchLimitSeconds') watchLimitSeconds: number = 1800;
+  @StorageLink('watchLimitSeconds') watchLimitSeconds: number = 900;
   @StorageLink('bankId') bankId: string = 'chinese_primary';
   @StorageLink('unlockCount') unlockCount: number = 3;
 
