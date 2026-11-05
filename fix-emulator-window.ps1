@@ -14,7 +14,9 @@ public class W32Fix {
   public struct RECT { public int L, T, R, B; }
 }
 "@
-$q = Get-Process qemu-system-x86_64 -ErrorAction SilentlyContinue |
+# 进程名匹配两种后端：qemu-system-x86_64.exe（有窗）与
+# qemu-system-x86_64-headless.exe（无头，MainWindowHandle=0 天然被过滤）
+$q = Get-Process -Name "qemu-system-x86_64","qemu-system-x86_64-headless" -ErrorAction SilentlyContinue |
   Where-Object { $_.MainWindowHandle -ne 0 -and $_.MainWindowTitle -like "*$AvdName*" } |
   Select-Object -First 1
 if ($q) {

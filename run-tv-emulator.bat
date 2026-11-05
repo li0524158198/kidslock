@@ -15,8 +15,32 @@ set AVD=KidsLockTV720
 
 call :findserial
 if defined SERIAL (
-  echo [1/4] %AVD% already online [%SERIAL%], reusing
-  goto positioned
+  rem ---- online, but check the window exists: a headless backend
+  rem ---- (qemu-system-x86_64-headless.exe) runs with no window at all.
+  rem ---- In that case restart the emulator in GUI mode. ----
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0fix-emulator-window.ps1" -AvdName %AVD% -X 20 -Y 20 > "%TEMP%\fixwin_out.txt" 2>&1
+  findstr /c:"moved" "%TEMP%\fixwin_out.txt" >nul
+  if not errorlevel 1 (
+    echo [1/4] %AVD% already online [%SERIAL%] with window, reusing
+    goto positioned
+  )
+  echo       Emulator online but windowless -headless backend-, restarting in GUI mode...
+  "%ADB%" -s %SERIAL% emu kill >nul 2>&1
+  ping -n 8 127.0.0.1 >nul
+)
+
+rem ---- zombie cleanup: launcher stub alive but no qemu backend at all
+rem ---- (stub would hold the AVD lock, new instance exits with no window).
+rem ---- NB: match "qemu-system" to cover BOTH backends, windowed and headless.
+tasklist 2>nul | findstr /I "qemu-system" >nul
+if errorlevel 1 (
+  tasklist 2>nul | findstr /I "emulator.exe" >nul
+  if not errorlevel 1 (
+    echo       Cleaning zombie emulator launcher...
+    taskkill /IM emulator.exe /F >nul 2>&1
+    "%ADB%" kill-server >nul 2>&1
+    "%ADB%" start-server >nul 2>&1
+  )
 )
 
 echo [1/4] Starting TV emulator...
@@ -35,6 +59,7 @@ if not defined SERIAL (
 )
 echo       Serial: %SERIAL%
 
+:fixwin_loop
 echo [2/4] Waiting for window, positioning on screen...
 set /a TRIES=0
 :waitwin
@@ -72,16 +97,20 @@ pause
 endlocal
 exit /b 0
 
-rem ---- subroutine: find the serial of the online emulator whose
-rem ---- AVD name matches ("emu avd name" output ends with CR, so
-rem ---- compare via findstr /b prefix match, never string equality;
-rem ---- go through temp files to avoid quoted-command-in-for pitfalls)
+rem ---- subroutine: find the serial of the online emulator whose AVD name
+rem ---- matches AND is truly alive. A ghost entry (qemu dead, stale adb
+rem ---- record) can still answer "emu avd name" via its cached console
+rem ---- channel, so verify liveness first via "shell echo" (adb channel).
 :findserial
 set SERIAL=
 "%ADB%" devices > "%TEMP%\kl_adb_devices.txt" 2>nul
 for /f "usebackq tokens=1" %%D in (`findstr /r /c:"^emulator-" "%TEMP%\kl_adb_devices.txt"`) do (
-  "%ADB%" -s %%D emu avd name > "%TEMP%\kl_avd_name.txt" 2>nul
-  findstr /i /b /c:"%AVD%" "%TEMP%\kl_avd_name.txt" >nul 2>&1
-  if not errorlevel 1 set SERIAL=%%D
+  "%ADB%" -s %%D shell echo alive > "%TEMP%\kl_alive.txt" 2>nul
+  findstr /c:"alive" "%TEMP%\kl_alive.txt" >nul 2>&1
+  if not errorlevel 1 (
+    "%ADB%" -s %%D emu avd name > "%TEMP%\kl_avd_name.txt" 2>nul
+    findstr /i /b /c:"%AVD%" "%TEMP%\kl_avd_name.txt" >nul 2>&1
+    if not errorlevel 1 set SERIAL=%%D
+  )
 )
 goto :eof
