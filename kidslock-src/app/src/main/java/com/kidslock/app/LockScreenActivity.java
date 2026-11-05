@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -257,6 +258,23 @@ public class LockScreenActivity extends AppCompatActivity {
                 handler.postDelayed(this::checkPin, 200);
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TV-1：遥控器物理数字键直输 PIN（免 D-pad 逐格导航屏上键盘；手机实体键盘同样受益）
+        if (layoutPin != null && layoutPin.getVisibility() == View.VISIBLE) {
+            if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
+                onPinDigit(keyCode - KeyEvent.KEYCODE_0);
+                return true;
+            }
+            if (keyCode == KeyEvent.KEYCODE_DEL && pinInput.length() > 0) {
+                pinInput.setLength(pinInput.length() - 1);
+                updatePinDisplay();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void updatePinDisplay() {
