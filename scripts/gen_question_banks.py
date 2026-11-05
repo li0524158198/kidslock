@@ -799,6 +799,41 @@ for key in list(banks.keys()):
         deduped.append(it)
     banks[key] = deduped
 
+# ===== 并入真题题库（data/exam/webq_*.jsonl，语数英 G1-G6 各 30 题）=====
+# 真题来源：2022-2025 各地期中期末试卷改编（src 字段标注来源，仅源数据保留，不进内置库）。
+# 合并策略：追加到对应年级内置库末尾；题干与库内已有题目重复（教材知识点自然重叠，
+# 如反义词/古诗/作者）时跳过该真题并打印——同题干不同干扰项的变体题价值低，不重复收录。
+from pathlib import Path as _P
+ROOT = _P(__file__).resolve().parent.parent
+exam_merged = 0
+exam_skipped = []
+_exam_dir = ROOT / "data" / "exam"
+for _subject in ["chinese", "math", "english"]:
+    _f = _exam_dir / f"webq_{_subject}.jsonl"
+    if not _f.exists():
+        raise SystemExit(f"缺少真题源文件: {_f}")
+    for _line in _f.read_text(encoding="utf-8-sig").splitlines():
+        _line = _line.strip()
+        if not _line:
+            continue
+        _it = json.loads(_line)
+        _key = f"{_subject}_g{_it['grade']}"
+        _q = str(_it["q"]).strip()
+        _opts = [str(o).strip() for o in _it["opts"]]
+        _big = str(_it.get("big") or "").strip()
+        if any(_old["q"] == _q for _old in banks.get(_key, [])):
+            exam_skipped.append(f"{_key} «{_q}»")
+            continue
+        banks.setdefault(_key, []).append({
+            "q": _q,
+            "opts": _opts,
+            "ans": _it["ans"],
+            "char": _big if _big else None,
+        })
+        exam_merged += 1
+for _s in exam_skipped:
+    print(f"  [跳过] 真题与内置库题干重复: {_s}")
+
 labels = {}
 grade_names = {1: "一年级", 2: "二年级", 3: "三年级", 4: "四年级", 5: "五年级", 6: "六年级",
                7: "初一", 8: "初二", 9: "初三", 10: "高一", 11: "高二", 12: "高三"}
@@ -817,8 +852,6 @@ meta = {
 
 # ===== 写单一源 JSON（data/questions.json）=====
 # 三平台资源目录的 questions.json 一律由 scripts/sync_questions.py 分发，不在本脚本直接写。
-from pathlib import Path as _P
-ROOT = _P(__file__).resolve().parent.parent
 data_path = ROOT / "data" / "questions.json"
 data_path.parent.mkdir(parents=True, exist_ok=True)
 data = json.dumps(meta, ensure_ascii=False, indent=1)
@@ -844,7 +877,8 @@ for key, items in banks.items():
             w.writerow([it["q"], opts[0], opts[1], opts[2], opts[3], ans, char])
 
 total = sum(len(v) for v in banks.values())
-print(f"36 库生成完毕：共 {total} 题；JSON→data/questions.json；CSV 种子→{len(banks)} 个")
+print(f"36 库生成完毕：内置 {total - exam_merged} 题 + 真题 {exam_merged} 题 = 共 {total} 题；"
+      f"JSON→data/questions.json；CSV 种子→{len(banks)} 个")
 print("下一步：python scripts/sync_questions.py 分发到三平台资源位（或先 --check 校验）")
 for s in ["chinese", "math", "english"]:
     for g in [1, 6, 12]:

@@ -1,0 +1,33 @@
+{
+ "math_checked": 112,
+ "math_wrong": [],
+ "pinyin_checked": 10,
+ "pinyin_warn": [],
+ "schema_bad": [],
+ "dup_same_bank": [],
+ "dup_cross_exact": [],
+ "dup_cross_qtext": [
+  {
+   "banks": [
+    "english_g2",
+    "english_g3"
+   ],
+   "q": "「西瓜」的英文是？"
+  },
+  {
+   "banks": [
+    "english_g3",
+    "english_g4",
+    "english_g7"
+   ],
+   "q": "「图书馆」的英文是？"
+  },
+  {
+   "banks": [
+    "english_g10",
+    "english_g11"
+   ],
+   "q": "「繁荣」的英文是？"
+  }
+ ]
+}

@@ -1,0 +1,180 @@
+{"grade": 1, "q": "字母表中的第一个字母是___", "opts": ["Aa", "Bb", "Cc", "Dd"], "ans": 0, "big": "", "src": "2024·北京海淀期末（改编）"}
+{"grade": 1, "q": "字母 g 的大写是___", "opts": ["G", "J", "Q", "Y"], "ans": 0, "big": "", "src": "2025·江苏苏州期末（改编）"}
+{"grade": 1, "q": "大写字母 E 的前一个字母是___", "opts": ["F", "G", "D", "C"], "ans": 2, "big": "", "src": "2025·上海期末（改编）"}
+{"grade": 1, "q": "Hello 的意思是___", "opts": ["你好", "再见", "谢谢", "对不起"], "ans": 0, "big": "", "src": "2023·新起点一年级期末（改编）"}
+{"grade": 1, "q": "Good morning 的意思是___", "opts": ["晚上好", "下午好", "早上好", "晚安"], "ans": 2, "big": "", "src": "2025·上海期末（改编）"}
+{"grade": 1, "q": "向别人告别时说___", "opts": ["Hello", "Bye-bye", "Hi", "Sorry"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "cat 的意思是___", "opts": ["狗", "鸭子", "猫", "猪"], "ans": 2, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 1, "q": "红色的英文是___", "opts": ["green", "red", "blue", "black"], "ans": 1, "big": "", "src": "2024·北京海淀期末（改编）"}
+{"grade": 1, "q": "yellow 的意思是___", "opts": ["黄色", "红色", "蓝色", "绿色"], "ans": 0, "big": "", "src": "2025·江苏苏州期末（改编）"}
+{"grade": 1, "q": "数字 5 的英文是___", "opts": ["four", "six", "five", "ten"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "one two ___ four", "opts": ["ten", "five", "nine", "three"], "ans": 3, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 1, "q": "铅笔的英文是___", "opts": ["pencil", "pen", "ruler", "eraser"], "ans": 0, "big": "", "src": "2023·新起点一年级期末（改编）"}
+{"grade": 1, "q": "eraser 的意思是___", "opts": ["尺子", "钢笔", "书", "橡皮"], "ans": 3, "big": "", "src": "2025·上海期末（改编）"}
+{"grade": 1, "q": "手的英文是___", "opts": ["head", "hand", "leg", "arm"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "眼睛的英文是___", "opts": ["ear", "eye", "nose", "mouth"], "ans": 1, "big": "", "src": "2024·北京海淀期末（改编）"}
+{"grade": 1, "q": "duck 的意思是___", "opts": ["鸭子", "小鸡", "小鸟", "鱼"], "ans": 0, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 1, "q": "apple 是一种___", "opts": ["动物", "颜色", "文具", "水果"], "ans": 3, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "red yellow blue 都是___", "opts": ["数字", "颜色", "动物", "水果"], "ans": 1, "big": "", "src": "2025·上海期末（改编）"}
+{"grade": 1, "q": "cat dog pig 都是___", "opts": ["水果", "颜色", "文具", "动物"], "ans": 3, "big": "", "src": "2024·北京海淀期末（改编）"}
+{"grade": 1, "q": "How are you? 用于___", "opts": ["告别", "感谢", "道歉", "问候"], "ans": 3, "big": "", "src": "2023·新起点一年级期末（改编）"}
+{"grade": 1, "q": "Hi! 的回答可以是___", "opts": ["Hello!", "Bye!", "OK!", "No!"], "ans": 0, "big": "", "src": "2025·江苏苏州期末（改编）"}
+{"grade": 1, "q": "big 的反义词是___", "opts": ["small", "tall", "long", "fat"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "What's your name? 的意思是___", "opts": ["你好吗", "你叫什么名字", "你几岁", "这是什么"], "ans": 1, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 1, "q": "谢谢 的英文是___", "opts": ["Sorry", "Thank you", "Bye", "Hello"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "pencil-box 的意思是___", "opts": ["铅笔", "钢笔", "铅笔盒", "书"], "ans": 2, "big": "", "src": "2025·上海期末（改编）"}
+{"grade": 1, "q": "face 的意思是___", "opts": ["手", "鼻子", "耳朵", "脸"], "ans": 3, "big": "", "src": "PEP期末常见题型"}
+{"grade": 1, "q": "下列全是小写字母的一组是___", "opts": ["A D Q P", "b d q p", "a E q p", "B d Q p"], "ans": 1, "big": "", "src": "2024·北京海淀期末（改编）"}
+{"grade": 1, "q": "nine 的意思是___", "opts": ["五", "四", "九", "十"], "ans": 2, "big": "", "src": "2023·新起点一年级期末（改编）"}
+{"grade": 1, "q": "chair 的意思是___", "opts": ["桌子", "书", "门", "椅子"], "ans": 3, "big": "", "src": "2025·江苏苏州期末（改编）"}
+{"grade": 1, "q": "tiger 的意思是___", "opts": ["狮子", "大象", "老虎", "马"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "apple 的复数是___", "opts": ["apple", "appleses", "apples", "an apple"], "ans": 2, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 2, "q": "I ___ bananas.", "opts": ["like", "likes", "liking", "liked"], "ans": 0, "big": "", "src": "2023·深港版二年级期末（改编）"}
+{"grade": 2, "q": "___ is my mother.", "opts": ["This", "These", "Those", "They"], "ans": 0, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 2, "q": "Stand ___ please.", "opts": ["in", "up", "on", "down"], "ans": 1, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 2, "q": "Sit ___ please.", "opts": ["down", "up", "in", "out"], "ans": 0, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 2, "q": "爸爸 的英文是___", "opts": ["mother", "brother", "sister", "father"], "ans": 3, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 2, "q": "pear banana peach 都是___", "opts": ["蔬菜", "动物", "水果", "饮料"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "rice noodles 都是___", "opts": ["玩具", "水果", "动物", "食物"], "ans": 3, "big": "", "src": "2025·浙江宁波期末（改编）"}
+{"grade": 2, "q": "doll ball kite 都是___", "opts": ["食物", "文具", "衣服", "玩具"], "ans": 3, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 2, "q": "grandfather 的意思是___", "opts": ["爷爷", "爸爸", "哥哥", "叔叔"], "ans": 0, "big": "", "src": "2025·浙江宁波期末（改编）"}
+{"grade": 2, "q": "sister 的意思是___", "opts": ["兄弟", "姐妹", "妈妈", "阿姨"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "I have three ___（书）", "opts": ["book", "bookes", "books", "bikes"], "ans": 2, "big": "", "src": "2023·深港版二年级期末（改编）"}
+{"grade": 2, "q": "___ the door. （开门）", "opts": ["Close", "Sit", "Stand", "Open"], "ans": 3, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 2, "q": "___ the window. （关窗）", "opts": ["Open", "Close", "Sit", "Look"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "Touch your ___（鼻子）", "opts": ["ear", "eye", "mouth", "nose"], "ans": 3, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 2, "q": "___ is my father. He is tall.", "opts": ["These", "Those", "This", "They"], "ans": 2, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 2, "q": "This ___ my family.", "opts": ["are", "am", "be", "is"], "ans": 3, "big": "", "src": "2023·深港版二年级期末（改编）"}
+{"grade": 2, "q": "I like ___（苹果）", "opts": ["apple", "appleses", "apples", "applees"], "ans": 2, "big": "", "src": "2025·浙江宁波期末（改编）"}
+{"grade": 2, "q": "banana 的复数是___", "opts": ["banana", "bananaes", "bananas", "bananies"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "妈妈 的英文是___", "opts": ["father", "mother", "brother", "uncle"], "ans": 1, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 2, "q": "noodle 的复数是___", "opts": ["noodle", "noodles", "noodlees", "noodleses"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "___ up! （起立）", "opts": ["Sit", "Look", "Stand", "Put"], "ans": 2, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 2, "q": "___ down! （坐下）", "opts": ["Stand", "Sit", "Put", "Look"], "ans": 1, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 2, "q": "hot dog 的意思是___", "opts": ["汉堡", "蛋糕", "面包", "热狗"], "ans": 3, "big": "", "src": "2023·深港版二年级期末（改编）"}
+{"grade": 2, "q": "milk 的意思是___", "opts": ["水", "果汁", "牛奶", "茶"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "ball 的意思是___", "opts": ["娃娃", "球", "风筝", "小汽车"], "ans": 1, "big": "", "src": "2025·浙江宁波期末（改编）"}
+{"grade": 2, "q": "family 的意思是___", "opts": ["朋友", "老师", "学校", "家庭"], "ans": 3, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 2, "q": "I like ___（猫）", "opts": ["cats", "cat", "cates", "caties"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 2, "q": "brother 的意思是___", "opts": ["兄弟", "姐妹", "爸爸", "爷爷"], "ans": 0, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 2, "q": "Show ___ your pen.", "opts": ["me", "I", "my", "we"], "ans": 0, "big": "", "src": "2023·深港版二年级期末（改编）"}
+{"grade": 3, "q": "Nice ___ meet you.", "opts": ["too", "to", "two", "for"], "ans": 1, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 3, "q": "___ to meet you too.", "opts": ["Fine", "Nice", "OK", "Well"], "ans": 1, "big": "", "src": "2024·上海期末（改编）"}
+{"grade": 3, "q": "I ___ a boy.", "opts": ["is", "are", "am", "be"], "ans": 2, "big": "", "src": "2024·广东广州期末（改编）"}
+{"grade": 3, "q": "She ___ my new friend.", "opts": ["am", "are", "be", "is"], "ans": 3, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 3, "q": "What ___ is the pen? It's blue.", "opts": ["colour", "day", "time", "name"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "___ is that woman? She's my mother.", "opts": ["What", "Where", "How", "Who"], "ans": 3, "big": "", "src": "2025·江苏南京期末（改编）"}
+{"grade": 3, "q": "___ are these? They're ducks.", "opts": ["Who", "Whose", "Where", "What"], "ans": 3, "big": "", "src": "2024·广东广州期末（改编）"}
+{"grade": 3, "q": "This ___ my schoolbag.", "opts": ["are", "am", "is", "be"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "These ___ my crayons.", "opts": ["is", "am", "be", "are"], "ans": 3, "big": "", "src": "2024·湖北武汉期末（改编）"}
+{"grade": 3, "q": "How ___ you? I'm fine.", "opts": ["is", "are", "am", "be"], "ans": 1, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 3, "q": "书包 的英文是___", "opts": ["schoolbag", "school", "story book", "notebook"], "ans": 0, "big": "", "src": "2024·上海期末（改编）"}
+{"grade": 3, "q": "Good afternoon 的意思是___", "opts": ["早上好", "晚上好", "下午好", "晚安"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "Let's ___ to school.", "opts": ["goes", "go", "going", "went"], "ans": 1, "big": "", "src": "2025·江苏南京期末（改编）"}
+{"grade": 3, "q": "Where ___ my pencil? It's on the desk.", "opts": ["are", "am", "is", "be"], "ans": 2, "big": "", "src": "2024·湖北武汉期末（改编）"}
+{"grade": 3, "q": "I have ___ eraser.", "opts": ["an", "a", "two", "some"], "ans": 0, "big": "", "src": "2024·广东广州期末（改编）"}
+{"grade": 3, "q": "Look at ___（我）", "opts": ["I", "me", "my", "mine"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "___ old are you? I'm nine.", "opts": ["What", "Who", "Where", "How"], "ans": 3, "big": "", "src": "2025·江苏南京期末（改编）"}
+{"grade": 3, "q": "___ your name? My name is Mike.", "opts": ["How's", "What's", "Who's", "Where's"], "ans": 1, "big": "", "src": "2024·上海期末（改编）"}
+{"grade": 3, "q": "elephant 的意思是___", "opts": ["老虎", "大象", "狮子", "马"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "duck 的复数是___", "opts": ["ducks", "duck", "duckes", "duckses"], "ans": 0, "big": "", "src": "2024·湖北武汉期末（改编）"}
+{"grade": 3, "q": "This is Miss White. 你应该说：___", "opts": ["Nice to meet you", "How old are you", "What's this", "Goodbye"], "ans": 0, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 3, "q": "How are you? 的恰当回答是___", "opts": ["I'm fine thank you", "My name is Tom", "I'm nine", "It's red"], "ans": 0, "big": "", "src": "2024·上海期末（改编）"}
+{"grade": 3, "q": "schoolbag book pencil 都是___", "opts": ["文具", "动物", "颜色", "食物"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "___ is it? It's a dog.", "opts": ["Who", "Where", "How", "What"], "ans": 3, "big": "", "src": "2024·广东广州期末（改编）"}
+{"grade": 3, "q": "Is this your ruler? Yes ___", "opts": ["I am", "he is", "it is", "you are"], "ans": 2, "big": "", "src": "2025·江苏南京期末（改编）"}
+{"grade": 3, "q": "white 的意思是___", "opts": ["黑色", "棕色", "白色", "绿色"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "Nice to meet you. 的回答是___", "opts": ["Thank you", "Bye-bye", "Nice to meet you too", "I'm fine"], "ans": 2, "big": "", "src": "2024·湖北武汉期末（改编）"}
+{"grade": 3, "q": "My name ___ Chen Jie.", "opts": ["are", "am", "be", "is"], "ans": 3, "big": "", "src": "PEP期末常见题型"}
+{"grade": 3, "q": "___ books do you have? Three.", "opts": ["What", "Who", "Where", "How"], "ans": 3, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 3, "q": "See you! 的意思是___", "opts": ["初次见面", "再见", "谢谢你", "早上好"], "ans": 1, "big": "", "src": "2024·上海期末（改编）"}
+{"grade": 4, "q": "What ___ is it? It's 7 o'clock.", "opts": ["colour", "time", "day", "name"], "ans": 1, "big": "", "src": "2025·四川成都期末（改编）"}
+{"grade": 4, "q": "It's time ___ get up.", "opts": ["for", "of", "to", "in"], "ans": 2, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "It's time ___ English class.", "opts": ["to", "of", "for", "at"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 4, "q": "What's the weather ___ in Beijing?", "opts": ["is", "are", "at", "like"], "ans": 3, "big": "", "src": "2024·广东广州期中（改编）"}
+{"grade": 4, "q": "Is it sunny? Yes ___", "opts": ["is it", "it is", "they are", "I am"], "ans": 1, "big": "", "src": "2025·四川成都期末（改编）"}
+{"grade": 4, "q": "It's ___ today. Let's fly a kite.", "opts": ["rainy", "windy", "red", "read"], "ans": 1, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 4, "q": "The ball is ___ the box.（在里面）", "opts": ["in", "on", "under", "near"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 4, "q": "The keys are ___ the door.", "opts": ["on", "at", "of", "in"], "ans": 3, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "My friend ___ red glasses.", "opts": ["have", "is", "has", "are"], "ans": 2, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "How many ___ are there in your family?", "opts": ["peoples", "mans", "men", "people"], "ans": 3, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "I'd like some ___（面条）", "opts": ["bread", "noodles", "juice", "rice"], "ans": 1, "big": "", "src": "2025·山东济南期末（改编）"}
+{"grade": 4, "q": "Are there ___ apples on the table?", "opts": ["any", "some", "a", "an"], "ans": 0, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 4, "q": "There ___ some water in the cup.", "opts": ["are", "am", "is", "be"], "ans": 2, "big": "", "src": "2025·山东济南期末（改编）"}
+{"grade": 4, "q": "She ___ to school at 7:00.", "opts": ["go", "goes", "going", "went"], "ans": 1, "big": "", "src": "2024·广东广州期中（改编）"}
+{"grade": 4, "q": "He ___ like fish.", "opts": ["doesn't", "don't", "isn't", "aren't"], "ans": 0, "big": "", "src": "2025·四川成都期末（改编）"}
+{"grade": 4, "q": "I can see ___ milk in the glass.", "opts": ["any", "some", "a", "an"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 4, "q": "Can I have ___ bread? Sure!", "opts": ["any", "a", "an", "some"], "ans": 3, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 4, "q": "外套 的英文是___", "opts": ["hat", "scarf", "gloves", "coat"], "ans": 3, "big": "", "src": "2025·山东济南期末（改编）"}
+{"grade": 4, "q": "warm 的意思是___", "opts": ["凉爽的", "寒冷的", "温暖的", "炎热的"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 4, "q": "It's cold. ___ your coat.", "opts": ["Put on", "Take off", "Look at", "Get up"], "ans": 0, "big": "", "src": "2024·广东广州期中（改编）"}
+{"grade": 4, "q": "Where ___ my shoes? They're under the bed.", "opts": ["are", "is", "am", "be"], "ans": 0, "big": "", "src": "2025·四川成都期末（改编）"}
+{"grade": 4, "q": "It's 9 p.m. 你应该说：___", "opts": ["Good morning", "Good afternoon", "Good night", "Goodbye"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 4, "q": "Daming has ___ English book.", "opts": ["a", "some", "three", "an"], "ans": 3, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "Let ___ clean the floor.", "opts": ["I", "my", "mine", "me"], "ans": 3, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "We ___ a new classroom.", "opts": ["has", "have", "is", "are"], "ans": 1, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "Are the pictures near the window? No ___", "opts": ["it isn't", "they are", "they aren't", "the are"], "ans": 2, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "What's ___ dinner?", "opts": ["for", "to", "of", "in"], "ans": 0, "big": "", "src": "2024·广东深圳期末（改编）"}
+{"grade": 4, "q": "snowy 的意思是___", "opts": ["下雪的", "下雨的", "晴朗的", "多云的"], "ans": 0, "big": "", "src": "2025·山东济南期末（改编）"}
+{"grade": 4, "q": "Mike ___ up at 6:30 every day.", "opts": ["gets", "get", "getting", "got"], "ans": 0, "big": "", "src": "2024·浙江杭州期末（改编）"}
+{"grade": 4, "q": "There isn't ___ milk in the glass.", "opts": ["some", "a", "any", "an"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "Look! The girls ___ dancing.", "opts": ["is", "am", "be", "are"], "ans": 3, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 5, "q": "I usually ___ TV on Sundays.", "opts": ["watches", "watching", "watch", "watched"], "ans": 2, "big": "", "src": "2022·广东深圳期末（真题改编）"}
+{"grade": 5, "q": "Listen! She ___ singing.", "opts": ["are", "am", "is", "be"], "ans": 2, "big": "", "src": "2024·江苏南京期末（改编）"}
+{"grade": 5, "q": "I'm ___ my homework now.", "opts": ["do", "does", "doing", "did"], "ans": 2, "big": "", "src": "2025·山东青岛期末（改编）"}
+{"grade": 5, "q": "We often ___ sports after school.", "opts": ["plays", "playing", "play", "played"], "ans": 2, "big": "", "src": "2024·北京西城期末（改编）"}
+{"grade": 5, "q": "___ is the first month of a year.", "opts": ["January", "February", "March", "April"], "ans": 0, "big": "", "src": "2024·江苏南京期末（改编）"}
+{"grade": 5, "q": "June is the ___ month of a year.", "opts": ["six", "sixteen", "sixty", "sixth"], "ans": 3, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "There ___ a book on the desk.", "opts": ["are", "am", "be", "is"], "ans": 3, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 5, "q": "There ___ some students in the park.", "opts": ["are", "is", "am", "be"], "ans": 0, "big": "", "src": "2025·浙江杭州期末（改编）"}
+{"grade": 5, "q": "There ___ some juice in the glass.", "opts": ["are", "is", "am", "be"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "Can you ___? Yes I can.", "opts": ["swimming", "swims", "swam", "swim"], "ans": 3, "big": "", "src": "2024·北京西城期末（改编）"}
+{"grade": 5, "q": "My birthday is ___ May.", "opts": ["on", "at", "in", "of"], "ans": 2, "big": "", "src": "2025·山东青岛期末（改编）"}
+{"grade": 5, "q": "I often go ___ with my mom.", "opts": ["shopping", "shops", "shoping", "shop"], "ans": 0, "big": "", "src": "2022·广东深圳期末（真题改编）"}
+{"grade": 5, "q": "Teachers' Day is in ___.", "opts": ["October", "September", "June", "July"], "ans": 1, "big": "", "src": "2024·江苏南京期末（改编）"}
+{"grade": 5, "q": "___ do you like spring? Because it is warm.", "opts": ["What", "Why", "When", "Where"], "ans": 1, "big": "", "src": "2022·广东深圳期末（真题改编）"}
+{"grade": 5, "q": "This sweater is Sarah's. ___ is pink.", "opts": ["Mine", "My", "I", "Me"], "ans": 0, "big": "", "src": "2022·广东深圳期末（真题改编）"}
+{"grade": 5, "q": "Children's Day is ___ June 1st.", "opts": ["in", "on", "at", "of"], "ans": 1, "big": "", "src": "2025·浙江杭州期末（改编）"}
+{"grade": 5, "q": "The third month of a year is ___.", "opts": ["April", "March", "May", "June"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "What ___ you doing? I'm reading.", "opts": ["is", "am", "do", "are"], "ans": 3, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 5, "q": "He often ___ football on weekends.", "opts": ["plays", "play", "playing", "played"], "ans": 0, "big": "", "src": "2024·北京西城期末（改编）"}
+{"grade": 5, "q": "What do you do ___ the weekend?", "opts": ["in", "on", "at", "for"], "ans": 1, "big": "", "src": "2025·山东青岛期末（改编）"}
+{"grade": 5, "q": "March April May 都属于___", "opts": ["summer", "autumn", "spring", "winter"], "ans": 2, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "twentieth 的意思是___", "opts": ["第十二", "第二", "第三十", "第二十"], "ans": 3, "big": "", "src": "2024·江苏南京期末（改编）"}
+{"grade": 5, "q": "Can he ___ the pipa?", "opts": ["plays", "playing", "play", "played"], "ans": 2, "big": "", "src": "2025·浙江杭州期末（改编）"}
+{"grade": 5, "q": "Are there ___ boats on the lake? Yes there are.", "opts": ["some", "a", "any", "an"], "ans": 2, "big": "", "src": "2025·湖北武汉期末（改编）"}
+{"grade": 5, "q": "第五个月的英文是___", "opts": ["April", "May", "June", "March"], "ans": 1, "big": "", "src": "PEP期末常见题型"}
+{"grade": 5, "q": "在图书馆看到 No eating! 意思是___", "opts": ["可以吃东西", "禁止吃东西", "请排队", "请慢走"], "ans": 1, "big": "", "src": "2022·广东深圳期末（真题改编）"}
+{"grade": 5, "q": "What's your favourite ___? Winter.", "opts": ["month", "weather", "sport", "season"], "ans": 3, "big": "", "src": "2024·北京西城期末（改编）"}
+{"grade": 5, "q": "Look at the monkeys! They ___ trees.", "opts": ["are climbing", "climb", "is climbing", "climbs"], "ans": 0, "big": "", "src": "2025·山东青岛期末（改编）"}
+{"grade": 5, "q": "August is the ___ month of a year.", "opts": ["eighth", "eight", "eighteen", "eighty"], "ans": 0, "big": "", "src": "PEP期末常见题型"}
+{"grade": 6, "q": "I ___ to the park yesterday.", "opts": ["go", "goes", "went", "going"], "ans": 2, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 6, "q": "He ___ TV last night.", "opts": ["watches", "watch", "watching", "watched"], "ans": 3, "big": "", "src": "2024·四川成都毕业考（改编）"}
+{"grade": 6, "q": "Did you ___ football last Sunday?", "opts": ["play", "played", "plays", "playing"], "ans": 0, "big": "", "src": "2023·湖北武汉毕业考（改编）"}
+{"grade": 6, "q": "What ___ you do last weekend?", "opts": ["do", "does", "doing", "did"], "ans": 3, "big": "", "src": "2024·浙江宁波期末（改编）"}
+{"grade": 6, "q": "Mike ___ a cold yesterday.", "opts": ["has", "have", "having", "had"], "ans": 3, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 6, "q": "Tom is ___ than Jim.", "opts": ["tall", "tallest", "higher", "taller"], "ans": 3, "big": "", "src": "2023·上海小升初（改编）"}
+{"grade": 6, "q": "Who is the ___ in your class?", "opts": ["tall", "taller", "tallest", "most tall"], "ans": 2, "big": "", "src": "2024·广东深圳期中（改编）"}
+{"grade": 6, "q": "My shoes are ___ than yours.", "opts": ["big", "biggest", "bigger", "biger"], "ans": 2, "big": "", "src": "PEP毕业考常见题型"}
+{"grade": 6, "q": "We ___ going to visit the Great Wall.", "opts": ["is", "am", "be", "are"], "ans": 3, "big": "", "src": "2024·浙江宁波期末（改编）"}
+{"grade": 6, "q": "I will ___ my grandparents tomorrow.", "opts": ["visited", "visits", "visit", "visiting"], "ans": 2, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 6, "q": "What are you going to do ___ Sunday?", "opts": ["in", "at", "on", "under"], "ans": 2, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 6, "q": "went 的动词原形是___", "opts": ["go", "goes", "gone", "going"], "ans": 0, "big": "", "src": "PEP毕业考常见题型"}
+{"grade": 6, "q": "buy 的过去式是___", "opts": ["bought", "buyed", "buys", "buying"], "ans": 0, "big": "", "src": "2024·四川成都毕业考（改编）"}
+{"grade": 6, "q": "下列单词中 a 发音不同的是___", "opts": ["cat", "name", "cake", "late"], "ans": 0, "big": "", "src": "2023·湖北武汉毕业考（改编）"}
+{"grade": 6, "q": "下列单词中 th 发音不同的是___", "opts": ["this", "three", "thin", "thank"], "ans": 0, "big": "", "src": "2023·湖北武汉毕业考（改编）"}
+{"grade": 6, "q": "Last summer I ___ to Beijing by train.", "opts": ["go", "went", "goes", "going"], "ans": 1, "big": "", "src": "2024·广东深圳期中（改编）"}
+{"grade": 6, "q": "How ___ are you? I'm 1.6 metres tall.", "opts": ["old", "tall", "long", "heavy"], "ans": 1, "big": "", "src": "2024·浙江宁波期末（改编）"}
+{"grade": 6, "q": "My ruler is longer than ___.", "opts": ["you", "yours", "your", "yourself"], "ans": 1, "big": "", "src": "PEP毕业考常见题型"}
+{"grade": 6, "q": "She ___ happy at the party last night.", "opts": ["was", "is", "are", "were"], "ans": 0, "big": "", "src": "2024·四川成都毕业考（改编）"}
+{"grade": 6, "q": "They ___ in Beijing in 2020.", "opts": ["was", "is", "are", "were"], "ans": 3, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 6, "q": "I'm going to ___ a trip next week.", "opts": ["took", "takes", "take", "taking"], "ans": 2, "big": "", "src": "2024·广东深圳期中（改编）"}
+{"grade": 6, "q": "holiday 的意思是___", "opts": ["假期", "旅行", "计划", "星期"], "ans": 0, "big": "", "src": "2023·上海小升初（改编）"}
+{"grade": 6, "q": "We had a lot of ___ in the park.", "opts": ["funny", "funs", "fun", "fan"], "ans": 2, "big": "", "src": "2024·山东济南期末（改编）"}
+{"grade": 6, "q": "It will ___ rainy tomorrow.", "opts": ["is", "be", "are", "am"], "ans": 1, "big": "", "src": "PEP毕业考常见题型"}
+{"grade": 6, "q": "I ___ my homework last night.", "opts": ["do", "did", "does", "doing"], "ans": 1, "big": "", "src": "2024·浙江宁波期末（改编）"}
+{"grade": 6, "q": "Where did you ___ over your holiday?", "opts": ["went", "go", "goes", "going"], "ans": 1, "big": "", "src": "2025·北京海淀期末（改编）"}
+{"grade": 6, "q": "How did you go there? I went ___ bus.", "opts": ["on", "in", "with", "by"], "ans": 3, "big": "", "src": "2024·四川成都毕业考（改编）"}
+{"grade": 6, "q": "The dog is ___ than the cat.（更重）", "opts": ["heavy", "heavier", "heaviest", "heavyer"], "ans": 1, "big": "", "src": "PEP毕业考常见题型"}
+{"grade": 6, "q": "下列单词中 o 发音不同的是___", "opts": ["hot", "nose", "note", "home"], "ans": 0, "big": "", "src": "2023·上海小升初（改编）"}
+{"grade": 6, "q": "询问对方假期去了哪里应说：___", "opts": ["What did you do", "How did you go", "When did you go", "Where did you go"], "ans": 3, "big": "", "src": "2023·上海小升初（改编）"}

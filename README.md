@@ -27,9 +27,11 @@ dist/
 三平台资源目录下的 `questions.json` **内容完全相同但都是副本，不要手改**。唯一源与工具链：
 
 ```
-data/questions.json                    ← 唯一题库源（入库）
-scripts/gen_question_banks.py          ← 上游生成器（固定种子 2026，重跑字节级可复现）
+data/questions.json                    ← 唯一题库源（入库；36 库 1141 题 = 内置 608 + 各地真题 533）
+data/exam/webq_*.jsonl                 ← 真题源数据（带来源标注，见 data/exam/README.md）
+scripts/gen_question_banks.py          ← 上游生成器（固定种子 2026，重跑字节级可复现；自动并入真题）
 scripts/sync_questions.py              ← 分发到三平台 / --check 校验一致性
+qa/bank_audit.py                       ← 正确性+重复审计（数学重算/拼音校验/三级查重）
 qa/test_data.py + qa/release_check.py  ← 数据层校验 + 发布核对（R1 四方 MD5 一致）
 ```
 

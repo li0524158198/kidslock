@@ -8,6 +8,7 @@
 | 层 | 入口 | 依赖 | 说明 |
 |---|---|---|---|
 | 数据层校验 | `python qa/test_data.py` | 无（离线） | 单一源 + 三平台 JSON 一致、36 库 schema、CSV 种子同步 |
+| 题库正确性审计 | `python qa/bank_audit.py` | pypinyin（可选） | 数学可算题重算答案、拼音题校验、三级查重；证据落 `reports/bank_audit.json` |
 | 题库/状态机逻辑回归 | `qa\jvm\run.bat`（Linux/macOS 用 `run.sh`） | JDK 8+ | Android **真实生产源码** + `jvm/shims` 里的 Android API 替身，桌面 JVM 直接跑 |
 | 跨平台 CSV 矩阵 | `qa\jvm\run.bat csv` | JDK 8+ | Android 导入鸿蒙导出/官方种子的兼容性矩阵（M4 需鸿蒙侧导出，见下） |
 | 设备冒烟（E2E） | `python qa/e2e_tv.py` 等 | 模拟器/真机 + adb | uiautomator 驱动的全流程实测 |
@@ -25,6 +26,9 @@
 
 **不要直接改三平台目录下的 questions.json**——`sync_questions.py --check` 和
 `release_check.py` R1 都会拦。
+
+> 拼音题校验（bank_audit T5.B / test_data T1.11）需要 pypinyin：`python -m pip install pypinyin`
+> （Windows 注意用 `python -m pip`，避免 pip 装进另一个解释器）。未安装时该项 SKIP 不影响退出码。
 
 ## JVM 逻辑回归（无需设备）
 
