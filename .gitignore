@@ -32,3 +32,6 @@ ios/**/xcuserdata/
 .DS_Store
 Thumbs.db
 __pycache__/
+
+# ZCode 
+.zcode/

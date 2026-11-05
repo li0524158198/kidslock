@@ -22,6 +22,28 @@ dist/
 > iOS 受苹果许可限制，IPA 只能在 macOS + Xcode（或 GitHub Actions 的 macOS Runner）上编译。
 > `ios/README.md` 提供两种方式，其中 GitHub Actions 云编译**无需 Mac**，约 10 分钟出包。
 
+## 题库单一源（data/，重要）
+
+三平台资源目录下的 `questions.json` **内容完全相同但都是副本，不要手改**。唯一源与工具链：
+
+```
+data/questions.json                    ← 唯一题库源（入库）
+scripts/gen_question_banks.py          ← 上游生成器（固定种子 2026，重跑字节级可复现）
+scripts/sync_questions.py              ← 分发到三平台 / --check 校验一致性
+qa/test_data.py + qa/release_check.py  ← 数据层校验 + 发布核对（R1 四方 MD5 一致）
+```
+
+改题库的正确流程：
+
+```bash
+# 1. 改 scripts/gen_question_banks.py（或直接编辑 data/questions.json）
+python scripts/gen_question_banks.py    # 重新生成单一源 + dist/csv 种子
+# 2. 分发 + 校验
+python scripts/sync_questions.py
+python scripts/sync_questions.py --check && python qa/test_data.py
+# 3. 各平台重新构建
+```
+
 ## 应用功能（三平台一致）
 
 - **定时锁屏**：15/30/45/60/90/120 分钟六档，到时自动锁屏
@@ -88,7 +110,10 @@ kidslock/
 │   ├── KidsLock/          # SwiftUI Xcode 工程
 │   ├── .github/workflows/ # GitHub Actions 云编译工作流
 │   └── README.md
-├── tools/                 # 本机构建环境（JDK/Android SDK/OpenHarmony SDK/hvigor）
-├── dist/                  # 最终产物
+├── data/                  # 题库单一源 questions.json（见上方说明）
+├── scripts/               # 题库生成/同步校验 + 数据工具
+├── qa/                    # 测试资产（JVM 逻辑回归 / 设备冒烟 / 发布核对，见 qa/README.md）
+├── tools/                 # 本机构建环境（JDK/Android SDK/OpenHarmony SDK/hvigor，不入库）
+├── dist/                  # 最终产物（不入库）
 └── README.md
 ```

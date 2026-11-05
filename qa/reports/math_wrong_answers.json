@@ -1,0 +1,485 @@
+[
+ {
+  "bank": "math_g1",
+  "idx": 1,
+  "q": "10 + 9 = ?",
+  "marked": "17",
+  "expect": 19.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 3,
+  "q": "2 + 8 = ?",
+  "marked": "11",
+  "expect": 10.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 4,
+  "q": "6 + 4 = ?",
+  "marked": "8",
+  "expect": 10.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 5,
+  "q": "6 + 7 = ?",
+  "marked": "14",
+  "expect": 13.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 6,
+  "q": "2 + 9 = ?",
+  "marked": "9",
+  "expect": 11.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 7,
+  "q": "3 + 10 = ?",
+  "marked": "14",
+  "expect": 13.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 10,
+  "q": "9 + 10 = ?",
+  "marked": "17",
+  "expect": 19.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 11,
+  "q": "7 + 10 = ?",
+  "marked": "16",
+  "expect": 17.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 12,
+  "q": "10 + 4 = ?",
+  "marked": "15",
+  "expect": 14.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 14,
+  "q": "4 + 2 = ?",
+  "marked": "4",
+  "expect": 6.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 15,
+  "q": "10 - 3 = ?",
+  "marked": "5",
+  "expect": 7.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 16,
+  "q": "10 - 9 = ?",
+  "marked": "0",
+  "expect": 1.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 17,
+  "q": "5 - 5 = ?",
+  "marked": "1",
+  "expect": 0.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 19,
+  "q": "7 - 2 = ?",
+  "marked": "3",
+  "expect": 5.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 21,
+  "q": "6 - 6 = ?",
+  "marked": "2",
+  "expect": 0.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 23,
+  "q": "9 - 2 = ?",
+  "marked": "5",
+  "expect": 7.0
+ },
+ {
+  "bank": "math_g1",
+  "idx": 24,
+  "q": "3 - 4 = ?",
+  "marked": "1",
+  "expect": -1.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 1,
+  "q": "89 + 36 = ?",
+  "marked": "126",
+  "expect": 125.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 2,
+  "q": "80 + 45 = ?",
+  "marked": "124",
+  "expect": 125.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 3,
+  "q": "51 + 85 = ?",
+  "marked": "135",
+  "expect": 136.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 4,
+  "q": "80 + 39 = ?",
+  "marked": "118",
+  "expect": 119.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 5,
+  "q": "87 + 75 = ?",
+  "marked": "163",
+  "expect": 162.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 6,
+  "q": "31 + 28 = ?",
+  "marked": "49",
+  "expect": 59.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 9,
+  "q": "56 + 14 = ?",
+  "marked": "71",
+  "expect": 70.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 11,
+  "q": "74 + 70 = ?",
+  "marked": "145",
+  "expect": 144.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 12,
+  "q": "8 × 7 = ?",
+  "marked": "55",
+  "expect": 56.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 13,
+  "q": "3 × 8 = ?",
+  "marked": "23",
+  "expect": 24.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 14,
+  "q": "2 × 2 = ?",
+  "marked": "3",
+  "expect": 4.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 15,
+  "q": "9 × 2 = ?",
+  "marked": "19",
+  "expect": 18.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 16,
+  "q": "4 × 4 = ?",
+  "marked": "12",
+  "expect": 16.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 17,
+  "q": "8 × 8 = ?",
+  "marked": "65",
+  "expect": 64.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 18,
+  "q": "4 × 7 = ?",
+  "marked": "24",
+  "expect": 28.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 19,
+  "q": "9 × 8 = ?",
+  "marked": "73",
+  "expect": 72.0
+ },
+ {
+  "bank": "math_g2",
+  "idx": 21,
+  "q": "3 × 5 = ?",
+  "marked": "16",
+  "expect": 15.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 0,
+  "q": "9 × 93 = ?",
+  "marked": "846",
+  "expect": 837.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 2,
+  "q": "3 × 90 = ?",
+  "marked": "267",
+  "expect": 270.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 3,
+  "q": "6 × 83 = ?",
+  "marked": "492",
+  "expect": 498.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 6,
+  "q": "3 × 75 = ?",
+  "marked": "228",
+  "expect": 225.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 7,
+  "q": "6 × 51 = ?",
+  "marked": "296",
+  "expect": 306.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 8,
+  "q": "3 × 12 = ?",
+  "marked": "26",
+  "expect": 36.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 9,
+  "q": "2 × 18 = ?",
+  "marked": "34",
+  "expect": 36.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 10,
+  "q": "130 ÷ 5 = ?",
+  "marked": "27",
+  "expect": 26.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 11,
+  "q": "345 ÷ 5 = ?",
+  "marked": "70",
+  "expect": 69.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 13,
+  "q": "464 ÷ 8 = ?",
+  "marked": "50",
+  "expect": 58.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 14,
+  "q": "504 ÷ 9 = ?",
+  "marked": "57",
+  "expect": 56.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 15,
+  "q": "141 ÷ 3 = ?",
+  "marked": "48",
+  "expect": 47.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 16,
+  "q": "320 ÷ 5 = ?",
+  "marked": "63",
+  "expect": 64.0
+ },
+ {
+  "bank": "math_g3",
+  "idx": 17,
+  "q": "378 ÷ 7 = ?",
+  "marked": "55",
+  "expect": 54.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 0,
+  "q": "35 × 4 = ?",
+  "marked": "136",
+  "expect": 140.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 1,
+  "q": "37 × 7 = ?",
+  "marked": "266",
+  "expect": 259.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 2,
+  "q": "95 × 4 = ?",
+  "marked": "370",
+  "expect": 380.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 3,
+  "q": "69 × 5 = ?",
+  "marked": "340",
+  "expect": 345.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 4,
+  "q": "37 × 4 = ?",
+  "marked": "152",
+  "expect": 148.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 5,
+  "q": "53 × 4 = ?",
+  "marked": "216",
+  "expect": 212.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 6,
+  "q": "56 × 9 = ?",
+  "marked": "494",
+  "expect": 504.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 7,
+  "q": "38 × 3 = ?",
+  "marked": "117",
+  "expect": 114.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 8,
+  "q": "324 ÷ 27 = ?",
+  "marked": "11",
+  "expect": 12.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 9,
+  "q": "48 ÷ 12 = ?",
+  "marked": "5",
+  "expect": 4.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 10,
+  "q": "360 ÷ 18 = ?",
+  "marked": "19",
+  "expect": 20.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 11,
+  "q": "242 ÷ 22 = ?",
+  "marked": "13",
+  "expect": 11.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 12,
+  "q": "330 ÷ 22 = ?",
+  "marked": "14",
+  "expect": 15.0
+ },
+ {
+  "bank": "math_g4",
+  "idx": 14,
+  "q": "192 ÷ 24 = ?",
+  "marked": "9",
+  "expect": 8.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 0,
+  "q": "357 ÷ 17 = ?",
+  "marked": "20",
+  "expect": 21.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 2,
+  "q": "930 ÷ 31 = ?",
+  "marked": "32",
+  "expect": 30.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 3,
+  "q": "1665 ÷ 45 = ?",
+  "marked": "39",
+  "expect": 37.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 4,
+  "q": "272 ÷ 17 = ?",
+  "marked": "15",
+  "expect": 16.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 5,
+  "q": "403 ÷ 31 = ?",
+  "marked": "14",
+  "expect": 13.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 6,
+  "q": "870 ÷ 30 = ?",
+  "marked": "31",
+  "expect": 29.0
+ },
+ {
+  "bank": "math_g5",
+  "idx": 7,
+  "q": "648 ÷ 36 = ?",
+  "marked": "20",
+  "expect": 18.0
+ }
+]

@@ -1,0 +1,4 @@
+# 换行符规则：shell 脚本必须 LF（CRLF 会破坏 shebang）；bat 固定 CRLF
+*.sh text eol=lf
+*.bat text eol=crlf
+*.jar binary

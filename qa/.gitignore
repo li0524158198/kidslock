@@ -1,0 +1,4 @@
+# 临时产物（设备冒烟 scratch、JVM 编译产物、测试沙箱）
+tmp/
+jvm/out/
+jvm/filedir/
